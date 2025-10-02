@@ -48,12 +48,12 @@ export default function ProfileScreen() {
         options={{
           title: "My Profile",
           headerStyle: {
-            backgroundColor: colors.card,
+            backgroundColor: colors.background,
           },
           headerTintColor: colors.text,
           headerRight: () => (
             <Pressable onPress={handleEditProfile} style={styles.headerButton}>
-              <IconSymbol name="pencil" size={20} color={colors.primary} />
+              <IconSymbol name="pencil" size={20} color={colors.accent} />
             </Pressable>
           ),
         }}
@@ -67,7 +67,9 @@ export default function ProfileScreen() {
           {/* Profile Header */}
           <View style={styles.profileHeader}>
             <View style={styles.avatarContainer}>
-              <IconSymbol name="person.circle.fill" size={80} color={colors.primary} />
+              <View style={styles.avatarCircle}>
+                <IconSymbol name="person.circle.fill" size={80} color={colors.accent} />
+              </View>
               <View style={[styles.statusBadge, { backgroundColor: '#28a745' }]}>
                 <Text style={styles.statusText}>ACTIVE</Text>
               </View>
@@ -104,7 +106,7 @@ export default function ProfileScreen() {
             
             <View style={styles.infoCard}>
               <View style={styles.infoRow}>
-                <IconSymbol name="envelope.fill" size={20} color={colors.textSecondary} />
+                <IconSymbol name="envelope.fill" size={20} color={colors.primary} />
                 <View style={styles.infoContent}>
                   <Text style={styles.infoLabel}>Email</Text>
                   <Text style={styles.infoValue}>{userProfile.email}</Text>
@@ -112,7 +114,7 @@ export default function ProfileScreen() {
               </View>
               
               <View style={styles.infoRow}>
-                <IconSymbol name="phone.fill" size={20} color={colors.textSecondary} />
+                <IconSymbol name="phone.fill" size={20} color={colors.primary} />
                 <View style={styles.infoContent}>
                   <Text style={styles.infoLabel}>Phone</Text>
                   <Text style={styles.infoValue}>{userProfile.phone}</Text>
@@ -120,7 +122,7 @@ export default function ProfileScreen() {
               </View>
               
               <View style={styles.infoRow}>
-                <IconSymbol name="calendar" size={20} color={colors.textSecondary} />
+                <IconSymbol name="calendar" size={20} color={colors.primary} />
                 <View style={styles.infoContent}>
                   <Text style={styles.infoLabel}>Join Date</Text>
                   <Text style={styles.infoValue}>{userProfile.joinDate}</Text>
@@ -141,7 +143,7 @@ export default function ProfileScreen() {
               <Text style={styles.emergencyContact}>{userProfile.emergencyContact}</Text>
               <Text style={styles.emergencyPhone}>{userProfile.emergencyPhone}</Text>
               <View style={styles.callButton}>
-                <IconSymbol name="phone.fill" size={16} color={colors.card} />
+                <IconSymbol name="phone.fill" size={16} color={colors.text} />
                 <Text style={styles.callButtonText}>Call Now</Text>
               </View>
             </Pressable>
@@ -196,6 +198,16 @@ const styles = StyleSheet.create({
     position: 'relative',
     marginBottom: 16,
   },
+  avatarCircle: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: colors.cardLight,
+    justifyContent: 'center',
+    alignItems: 'center',
+    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.2)',
+    elevation: 6,
+  },
   statusBadge: {
     position: 'absolute',
     bottom: 0,
@@ -209,7 +221,7 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 10,
     fontWeight: '600',
-    color: colors.card,
+    color: colors.text,
   },
   name: {
     fontSize: 24,
@@ -219,7 +231,7 @@ const styles = StyleSheet.create({
   },
   rank: {
     fontSize: 18,
-    color: colors.primary,
+    color: colors.accent,
     fontWeight: '600',
     marginBottom: 4,
   },
@@ -235,22 +247,22 @@ const styles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    backgroundColor: colors.card,
+    backgroundColor: colors.cardLight,
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.2)',
     elevation: 3,
   },
   statNumber: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: colors.text,
+    color: colors.background,
     marginTop: 8,
   },
   statLabel: {
     fontSize: 12,
-    color: colors.textSecondary,
+    color: colors.secondary,
     marginTop: 4,
     textAlign: 'center',
   },
@@ -265,10 +277,10 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   infoCard: {
-    backgroundColor: colors.card,
+    backgroundColor: colors.cardLight,
     borderRadius: 12,
     padding: 16,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.2)',
     elevation: 3,
   },
   infoRow: {
@@ -284,20 +296,20 @@ const styles = StyleSheet.create({
   },
   infoLabel: {
     fontSize: 12,
-    color: colors.textSecondary,
+    color: colors.secondary,
     marginBottom: 2,
   },
   infoValue: {
     fontSize: 16,
-    color: colors.text,
+    color: colors.background,
   },
   emergencyCard: {
-    backgroundColor: colors.card,
+    backgroundColor: colors.cardLight,
     borderRadius: 12,
     padding: 16,
     borderWidth: 2,
     borderColor: '#dc3545',
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.2)',
     elevation: 3,
   },
   emergencyHeader: {
@@ -313,7 +325,7 @@ const styles = StyleSheet.create({
   },
   emergencyContact: {
     fontSize: 16,
-    color: colors.text,
+    color: colors.background,
     fontWeight: '500',
     marginBottom: 4,
   },
@@ -334,7 +346,7 @@ const styles = StyleSheet.create({
   callButtonText: {
     fontSize: 14,
     fontWeight: '600',
-    color: colors.card,
+    color: colors.text,
     marginLeft: 8,
   },
   actionsGrid: {
@@ -344,18 +356,18 @@ const styles = StyleSheet.create({
   },
   actionCard: {
     width: '48%',
-    backgroundColor: colors.card,
+    backgroundColor: colors.cardLight,
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
     marginBottom: 12,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.2)',
     elevation: 3,
   },
   actionText: {
     fontSize: 14,
     fontWeight: '500',
-    color: colors.text,
+    color: colors.background,
     marginTop: 8,
   },
   headerButton: {

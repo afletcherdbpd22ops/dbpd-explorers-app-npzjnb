@@ -42,7 +42,7 @@ export default function RosterScreen() {
         options={{
           title: "Explorer Roster",
           headerStyle: {
-            backgroundColor: colors.card,
+            backgroundColor: colors.background,
           },
           headerTintColor: colors.text,
         }}

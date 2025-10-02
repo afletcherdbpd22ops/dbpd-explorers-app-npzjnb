@@ -17,7 +17,7 @@ export default function CalendarScreen() {
   const markedDates = events.reduce((acc, event) => {
     acc[event.date] = {
       marked: true,
-      dotColor: event.isRequired ? '#dc3545' : colors.primary,
+      dotColor: event.isRequired ? '#dc3545' : colors.accent,
       selectedColor: colors.primary,
     };
     return acc;
@@ -57,7 +57,7 @@ export default function CalendarScreen() {
         options={{
           title: "Calendar & Events",
           headerStyle: {
-            backgroundColor: colors.card,
+            backgroundColor: colors.background,
           },
           headerTintColor: colors.text,
         }}
@@ -74,18 +74,18 @@ export default function CalendarScreen() {
               onDayPress={handleDatePress}
               markedDates={markedDates}
               theme={{
-                backgroundColor: colors.card,
-                calendarBackground: colors.card,
-                textSectionTitleColor: colors.textSecondary,
+                backgroundColor: colors.cardLight,
+                calendarBackground: colors.cardLight,
+                textSectionTitleColor: colors.background,
                 selectedDayBackgroundColor: colors.primary,
-                selectedDayTextColor: colors.card,
+                selectedDayTextColor: colors.text,
                 todayTextColor: colors.primary,
-                dayTextColor: colors.text,
-                textDisabledColor: colors.textSecondary,
-                dotColor: colors.primary,
-                selectedDotColor: colors.card,
+                dayTextColor: colors.background,
+                textDisabledColor: colors.secondary,
+                dotColor: colors.accent,
+                selectedDotColor: colors.text,
                 arrowColor: colors.primary,
-                monthTextColor: colors.text,
+                monthTextColor: colors.background,
                 indicatorColor: colors.primary,
                 textDayFontWeight: '500',
                 textMonthFontWeight: '600',
@@ -98,7 +98,7 @@ export default function CalendarScreen() {
           {/* Legend */}
           <View style={styles.legendContainer}>
             <View style={styles.legendItem}>
-              <View style={[styles.legendDot, { backgroundColor: colors.primary }]} />
+              <View style={[styles.legendDot, { backgroundColor: colors.accent }]} />
               <Text style={styles.legendText}>Optional Event</Text>
             </View>
             <View style={styles.legendItem}>
@@ -146,15 +146,15 @@ export default function CalendarScreen() {
             <Text style={styles.sectionTitle}>Event Types</Text>
             <View style={styles.filterGrid}>
               <View style={[styles.filterCard, { backgroundColor: colors.primary }]}>
-                <IconSymbol name="graduationcap.fill" size={24} color={colors.card} />
+                <IconSymbol name="graduationcap.fill" size={24} color={colors.text} />
                 <Text style={styles.filterText}>Training</Text>
                 <Text style={styles.filterCount}>
                   {events.filter(e => e.type === 'training').length}
                 </Text>
               </View>
               
-              <View style={[styles.filterCard, { backgroundColor: colors.secondary }]}>
-                <IconSymbol name="person.3.fill" size={24} color={colors.card} />
+              <View style={[styles.filterCard, { backgroundColor: colors.card }]}>
+                <IconSymbol name="person.3.fill" size={24} color={colors.text} />
                 <Text style={styles.filterText}>Meetings</Text>
                 <Text style={styles.filterCount}>
                   {events.filter(e => e.type === 'meeting').length}
@@ -162,15 +162,15 @@ export default function CalendarScreen() {
               </View>
               
               <View style={[styles.filterCard, { backgroundColor: colors.accent }]}>
-                <IconSymbol name="heart.fill" size={24} color={colors.text} />
-                <Text style={[styles.filterText, { color: colors.text }]}>Community</Text>
-                <Text style={[styles.filterCount, { color: colors.text }]}>
+                <IconSymbol name="heart.fill" size={24} color={colors.background} />
+                <Text style={[styles.filterText, { color: colors.background }]}>Community</Text>
+                <Text style={[styles.filterCount, { color: colors.background }]}>
                   {events.filter(e => e.type === 'community').length}
                 </Text>
               </View>
               
               <View style={[styles.filterCard, { backgroundColor: '#dc3545' }]}>
-                <IconSymbol name="star.fill" size={24} color={colors.card} />
+                <IconSymbol name="star.fill" size={24} color={colors.text} />
                 <Text style={styles.filterText}>Ceremonies</Text>
                 <Text style={styles.filterCount}>
                   {events.filter(e => e.type === 'ceremony').length}
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     margin: 16,
     borderRadius: 12,
     overflow: 'hidden',
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.2)',
     elevation: 3,
   },
   calendar: {
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
   },
   clearText: {
     fontSize: 16,
-    color: colors.primary,
+    color: colors.accent,
     fontWeight: '500',
   },
   noEventsContainer: {
@@ -268,17 +268,19 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     marginBottom: 12,
+    boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.15)',
+    elevation: 3,
   },
   filterText: {
     fontSize: 14,
     fontWeight: '600',
-    color: colors.card,
+    color: colors.text,
     marginTop: 8,
     marginBottom: 4,
   },
   filterCount: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: colors.card,
+    color: colors.text,
   },
 });

@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Stack } from "expo-router";
-import { ScrollView, StyleSheet, View, Text, Pressable, Alert } from "react-native";
+import { ScrollView, StyleSheet, View, Text, Pressable, Alert, Image } from "react-native";
 import { IconSymbol } from "@/components/IconSymbol";
 import { colors, commonStyles } from "@/styles/commonStyles";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -27,7 +27,7 @@ export default function HomeScreen() {
       onPress={() => Alert.alert("Notifications", "No new notifications")}
       style={styles.headerButtonContainer}
     >
-      <IconSymbol name="bell.fill" color={colors.primary} size={20} />
+      <IconSymbol name="bell.fill" color={colors.text} size={20} />
     </Pressable>
   );
 
@@ -37,7 +37,7 @@ export default function HomeScreen() {
         options={{
           title: "DB Police Explorers",
           headerStyle: {
-            backgroundColor: colors.card,
+            backgroundColor: colors.background,
           },
           headerTintColor: colors.text,
           headerRight: renderHeaderRight,
@@ -49,14 +49,19 @@ export default function HomeScreen() {
           contentContainerStyle={styles.contentContainer}
           showsVerticalScrollIndicator={false}
         >
-          {/* Welcome Section */}
-          <View style={styles.welcomeSection}>
+          {/* Logo and Welcome Section */}
+          <View style={styles.logoSection}>
             <View style={styles.logoContainer}>
-              <IconSymbol name="shield.fill" size={60} color={colors.primary} />
+              {/* Logo placeholder - you can replace this with an actual logo image */}
+              <View style={styles.logoPlaceholder}>
+                <IconSymbol name="shield.fill" size={80} color={colors.accent} />
+                <Text style={styles.logoText}>LOGO</Text>
+              </View>
             </View>
-            <Text style={styles.welcomeTitle}>Welcome, Explorer!</Text>
+            <Text style={styles.welcomeTitle}>Daytona Beach</Text>
+            <Text style={styles.welcomeTitle}>Police Explorers</Text>
             <Text style={styles.welcomeSubtitle}>
-              Daytona Beach Police Explorer Program
+              Excellence • Service • Community
             </Text>
           </View>
 
@@ -68,15 +73,15 @@ export default function HomeScreen() {
                 style={[styles.quickActionCard, { backgroundColor: colors.primary }]}
                 onPress={() => router.push('/(tabs)/calendar')}
               >
-                <IconSymbol name="calendar" size={24} color={colors.card} />
+                <IconSymbol name="calendar" size={24} color={colors.text} />
                 <Text style={styles.quickActionText}>Calendar</Text>
               </Pressable>
               
               <Pressable 
-                style={[styles.quickActionCard, { backgroundColor: colors.secondary }]}
+                style={[styles.quickActionCard, { backgroundColor: colors.card }]}
                 onPress={() => router.push('/(tabs)/roster')}
               >
-                <IconSymbol name="person.3.fill" size={24} color={colors.card} />
+                <IconSymbol name="person.3.fill" size={24} color={colors.text} />
                 <Text style={styles.quickActionText}>Roster</Text>
               </Pressable>
               
@@ -84,15 +89,15 @@ export default function HomeScreen() {
                 style={[styles.quickActionCard, { backgroundColor: colors.accent }]}
                 onPress={() => Alert.alert("Google Drive", "Google Drive integration coming soon!")}
               >
-                <IconSymbol name="folder.fill" size={24} color={colors.text} />
-                <Text style={[styles.quickActionText, { color: colors.text }]}>Drive</Text>
+                <IconSymbol name="folder.fill" size={24} color={colors.background} />
+                <Text style={[styles.quickActionText, { color: colors.background }]}>Drive</Text>
               </Pressable>
               
               <Pressable 
-                style={[styles.quickActionCard, { backgroundColor: '#28a745' }]}
+                style={[styles.quickActionCard, { backgroundColor: '#10b981' }]}
                 onPress={() => router.push('/(tabs)/profile')}
               >
-                <IconSymbol name="person.fill" size={24} color={colors.card} />
+                <IconSymbol name="person.fill" size={24} color={colors.text} />
                 <Text style={styles.quickActionText}>Profile</Text>
               </Pressable>
             </View>
@@ -162,24 +167,46 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingBottom: 100, // Space for floating tab bar
   },
-  welcomeSection: {
+  logoSection: {
     alignItems: 'center',
-    paddingVertical: 32,
+    paddingVertical: 40,
     paddingHorizontal: 20,
+    backgroundColor: colors.background,
   },
   logoContainer: {
-    marginBottom: 16,
+    marginBottom: 24,
+    alignItems: 'center',
+  },
+  logoPlaceholder: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: colors.cardLight,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.2)',
+    elevation: 6,
+  },
+  logoText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: colors.accent,
+    marginTop: 4,
   },
   welcomeTitle: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     color: colors.text,
-    marginBottom: 8,
+    textAlign: 'center',
+    lineHeight: 32,
   },
   welcomeSubtitle: {
     fontSize: 16,
     color: colors.textSecondary,
     textAlign: 'center',
+    marginTop: 8,
+    fontStyle: 'italic',
   },
   quickActionsContainer: {
     paddingHorizontal: 20,
@@ -203,11 +230,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.15)',
+    elevation: 4,
   },
   quickActionText: {
     fontSize: 14,
     fontWeight: '600',
-    color: colors.card,
+    color: colors.text,
     marginTop: 8,
   },
   eventsSection: {
@@ -222,7 +251,7 @@ const styles = StyleSheet.create({
   },
   seeAllText: {
     fontSize: 16,
-    color: colors.primary,
+    color: colors.accent,
     fontWeight: '500',
   },
   noEventsContainer: {
@@ -246,18 +275,18 @@ const styles = StyleSheet.create({
   announcementTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.text,
+    color: colors.background,
     marginLeft: 8,
   },
   announcementText: {
     fontSize: 14,
-    color: colors.text,
+    color: colors.background,
     lineHeight: 20,
     marginBottom: 8,
   },
   announcementDate: {
     fontSize: 12,
-    color: colors.textSecondary,
+    color: colors.secondary,
   },
   headerButtonContainer: {
     padding: 6,
