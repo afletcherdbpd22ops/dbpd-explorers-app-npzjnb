@@ -1,8 +1,10 @@
+
 import React from 'react';
 import { Platform } from 'react-native';
 import { NativeTabs, Icon, Label } from 'expo-router/unstable-native-tabs';
 import { Stack } from 'expo-router';
 import FloatingTabBar, { TabBarItem } from '@/components/FloatingTabBar';
+import { colors } from '@/styles/commonStyles';
 
 export default function TabLayout() {
   // Define the tabs configuration
@@ -12,6 +14,18 @@ export default function TabLayout() {
       route: '/(tabs)/(home)/',
       icon: 'house.fill',
       label: 'Home',
+    },
+    {
+      name: 'calendar',
+      route: '/(tabs)/calendar',
+      icon: 'calendar',
+      label: 'Calendar',
+    },
+    {
+      name: 'roster',
+      route: '/(tabs)/roster',
+      icon: 'person.3.fill',
+      label: 'Roster',
     },
     {
       name: 'profile',
@@ -28,6 +42,14 @@ export default function TabLayout() {
         <NativeTabs.Trigger name="(home)">
           <Icon sf="house.fill" drawable="ic_home" />
           <Label>Home</Label>
+        </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="calendar">
+          <Icon sf="calendar" drawable="ic_calendar" />
+          <Label>Calendar</Label>
+        </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="roster">
+          <Icon sf="person.3.fill" drawable="ic_roster" />
+          <Label>Roster</Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="profile">
           <Icon sf="person.fill" drawable="ic_profile" />
@@ -47,6 +69,8 @@ export default function TabLayout() {
         }}
       >
         <Stack.Screen name="(home)" />
+        <Stack.Screen name="calendar" />
+        <Stack.Screen name="roster" />
         <Stack.Screen name="profile" />
       </Stack>
       <FloatingTabBar tabs={tabs} />
