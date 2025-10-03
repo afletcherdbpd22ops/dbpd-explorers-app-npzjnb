@@ -1,32 +1,29 @@
 
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable, Alert, Linking } from 'react-native';
-import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { IconSymbol } from '@/components/IconSymbol';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { roster, Explorer, isSpecialRank } from '@/data/roster';
 import { colors, commonStyles } from '@/styles/commonStyles';
-import { roster, Explorer } from '@/data/roster';
 
 export default function ExplorerDetailsScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const { id } = useLocalSearchParams();
   
   const explorer = roster.find(e => e.id === id);
-
+  
   if (!explorer) {
     return (
-      <>
-        <Stack.Screen options={{ title: "Explorer Not Found" }} />
-        <SafeAreaView style={[commonStyles.wrapper]}>
-          <View style={styles.errorContainer}>
-            <IconSymbol name="person.badge.minus" size={60} color={colors.textSecondary} />
-            <Text style={styles.errorText}>Explorer not found</Text>
-            <Pressable style={styles.backButton} onPress={() => router.back()}>
-              <Text style={styles.backButtonText}>Go Back</Text>
-            </Pressable>
-          </View>
-        </SafeAreaView>
-      </>
+      <SafeAreaView style={commonStyles.wrapper}>
+        <View style={styles.errorContainer}>
+          <IconSymbol name="person.badge.minus" size={60} color={colors.textSecondary} />
+          <Text style={styles.errorText}>Explorer not found</Text>
+          <Pressable style={styles.backButton} onPress={() => router.back()}>
+            <Text style={styles.backButtonText}>Go Back</Text>
+          </Pressable>
+        </View>
+      </SafeAreaView>
     );
   }
 
@@ -44,13 +41,34 @@ export default function ExplorerDetailsScreen() {
   };
 
   const getRankIcon = (rank: string) => {
-    if (rank.includes('Captain')) return 'star.fill';
-    if (rank.includes('Senior')) return 'chevron.up.circle.fill';
+    const lowerRank = rank.toLowerCase();
+    if (lowerRank.includes('major')) return 'star.square.fill';
+    if (lowerRank.includes('captain')) return 'star.fill';
+    if (lowerRank.includes('lieutenant')) return 'shield.fill';
+    if (lowerRank.includes('officer')) return 'person.badge.fill';
+    if (lowerRank.includes('sgt') || lowerRank.includes('sergeant')) return 'chevron.up.square.fill';
+    if (lowerRank.includes('advisor')) return 'graduationcap.fill';
+    if (lowerRank.includes('senior')) return 'chevron.up.circle.fill';
     return 'person.circle.fill';
   };
 
+  const getRankColor = (rank: string) => {
+    if (isSpecialRank(rank)) {
+      const lowerRank = rank.toLowerCase();
+      if (lowerRank.includes('major')) return '#FFD700'; // Gold
+      if (lowerRank.includes('captain')) return '#FF6B35'; // Orange-red
+      if (lowerRank.includes('lieutenant')) return '#4A90E2'; // Blue
+      if (lowerRank.includes('officer')) return '#50C878'; // Emerald green
+      if (lowerRank.includes('sgt') || lowerRank.includes('sergeant')) return '#9B59B6'; // Purple
+      if (lowerRank.includes('advisor')) return '#E74C3C'; // Red
+      return '#FFD700'; // Default gold for special ranks
+    }
+    return colors.primary;
+  };
+
   const handleCall = (phone: string) => {
-    Linking.openURL(`tel:${phone}`);
+    const phoneNumber = phone.replace(/[^\d]/g, '');
+    Linking.openURL(`tel:${phoneNumber}`);
   };
 
   const handleEmail = (email: string) => {
@@ -59,65 +77,90 @@ export default function ExplorerDetailsScreen() {
 
   const handleEmergencyCall = () => {
     Alert.alert(
-      "Emergency Contact",
+      'Emergency Contact',
       `Call ${explorer.emergencyContact}?`,
       [
-        { text: "Cancel", style: "cancel" },
-        { text: "Call", onPress: () => handleCall(explorer.emergencyPhone) }
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Call', 
+          onPress: () => {
+            const phoneNumber = explorer.emergencyPhone.replace(/[^\d]/g, '');
+            Linking.openURL(`tel:${phoneNumber}`);
+          }
+        }
       ]
     );
   };
+
+  const isSpecial = isSpecialRank(explorer.rank);
 
   return (
     <>
       <Stack.Screen
         options={{
-          title: "Explorer Details",
+          title: explorer.name,
           headerStyle: {
-            backgroundColor: colors.card,
+            backgroundColor: colors.background,
           },
           headerTintColor: colors.text,
         }}
       />
-      <SafeAreaView style={[commonStyles.wrapper]} edges={['bottom']}>
+      <SafeAreaView style={commonStyles.wrapper} edges={['bottom']}>
         <ScrollView 
           style={styles.container}
           contentContainerStyle={styles.contentContainer}
           showsVerticalScrollIndicator={false}
         >
-          {/* Explorer Header */}
-          <View style={styles.explorerHeader}>
+          {/* Profile Header */}
+          <View style={[styles.profileHeader, isSpecial && styles.specialProfileHeader]}>
+            {isSpecial && (
+              <View style={styles.specialBadge}>
+                <IconSymbol name="star.fill" size={16} color="#FFD700" />
+                <Text style={styles.specialBadgeText}>SPECIAL RANK</Text>
+              </View>
+            )}
+            
             <View style={styles.avatarContainer}>
               <IconSymbol 
                 name={getRankIcon(explorer.rank)} 
                 size={80} 
-                color={colors.primary} 
+                color={getRankColor(explorer.rank)} 
               />
-              <View style={[styles.statusBadge, { backgroundColor: getStatusColor(explorer.status) }]}>
-                <Text style={styles.statusText}>{explorer.status.toUpperCase()}</Text>
-              </View>
             </View>
-            <Text style={styles.explorerName}>{explorer.name}</Text>
-            <Text style={styles.explorerRank}>{explorer.rank}</Text>
-            <Text style={styles.joinDate}>Joined: {explorer.joinDate}</Text>
+            
+            <Text style={[styles.name, isSpecial && styles.specialName]}>
+              {explorer.name}
+            </Text>
+            
+            <Text style={[
+              styles.rank, 
+              isSpecial && styles.specialRankText,
+              { color: getRankColor(explorer.rank) }
+            ]}>
+              {explorer.rank}
+            </Text>
+            
+            <View style={[styles.statusBadge, { backgroundColor: getStatusColor(explorer.status) }]}>
+              <Text style={styles.statusText}>{explorer.status.toUpperCase()}</Text>
+            </View>
           </View>
 
           {/* Contact Information */}
-          <View style={styles.contactCard}>
-            <Text style={styles.cardTitle}>Contact Information</Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Contact Information</Text>
             
-            <Pressable style={styles.contactRow} onPress={() => handleEmail(explorer.email)}>
-              <IconSymbol name="envelope.fill" size={20} color={colors.primary} />
-              <View style={styles.contactContent}>
+            <Pressable style={styles.contactItem} onPress={() => handleEmail(explorer.email)}>
+              <IconSymbol name="envelope.fill" size={24} color={colors.primary} />
+              <View style={styles.contactInfo}>
                 <Text style={styles.contactLabel}>Email</Text>
                 <Text style={styles.contactValue}>{explorer.email}</Text>
               </View>
               <IconSymbol name="chevron.right" size={16} color={colors.textSecondary} />
             </Pressable>
-
-            <Pressable style={styles.contactRow} onPress={() => handleCall(explorer.phone)}>
-              <IconSymbol name="phone.fill" size={20} color={colors.primary} />
-              <View style={styles.contactContent}>
+            
+            <Pressable style={styles.contactItem} onPress={() => handleCall(explorer.phone)}>
+              <IconSymbol name="phone.fill" size={24} color={colors.primary} />
+              <View style={styles.contactInfo}>
                 <Text style={styles.contactLabel}>Phone</Text>
                 <Text style={styles.contactValue}>{explorer.phone}</Text>
               </View>
@@ -125,117 +168,90 @@ export default function ExplorerDetailsScreen() {
             </Pressable>
           </View>
 
+          {/* Service Information */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Service Information</Text>
+            
+            <View style={styles.infoItem}>
+              <IconSymbol name="calendar" size={24} color={colors.primary} />
+              <View style={styles.infoContent}>
+                <Text style={styles.infoLabel}>Join Date</Text>
+                <Text style={styles.infoValue}>{explorer.joinDate}</Text>
+              </View>
+            </View>
+            
+            <View style={styles.infoItem}>
+              <IconSymbol name="person.badge.fill" size={24} color={getRankColor(explorer.rank)} />
+              <View style={styles.infoContent}>
+                <Text style={styles.infoLabel}>Current Rank</Text>
+                <Text style={[styles.infoValue, { color: getRankColor(explorer.rank), fontWeight: isSpecial ? '700' : '600' }]}>
+                  {explorer.rank}
+                </Text>
+              </View>
+            </View>
+            
+            <View style={styles.infoItem}>
+              <IconSymbol 
+                name={explorer.status === 'active' ? 'checkmark.circle.fill' : 
+                      explorer.status === 'probationary' ? 'clock.fill' : 'xmark.circle.fill'} 
+                size={24} 
+                color={getStatusColor(explorer.status)} 
+              />
+              <View style={styles.infoContent}>
+                <Text style={styles.infoLabel}>Status</Text>
+                <Text style={[styles.infoValue, { color: getStatusColor(explorer.status) }]}>
+                  {explorer.status.charAt(0).toUpperCase() + explorer.status.slice(1)}
+                </Text>
+              </View>
+            </View>
+          </View>
+
           {/* Emergency Contact */}
-          <View style={styles.emergencyCard}>
-            <View style={styles.emergencyHeader}>
-              <IconSymbol name="exclamationmark.triangle.fill" size={24} color="#dc3545" />
-              <Text style={styles.emergencyTitle}>Emergency Contact</Text>
-            </View>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Emergency Contact</Text>
             
-            <View style={styles.emergencyInfo}>
-              <Text style={styles.emergencyContact}>{explorer.emergencyContact}</Text>
-              <Text style={styles.emergencyPhone}>{explorer.emergencyPhone}</Text>
-            </View>
-            
-            <Pressable style={styles.emergencyCallButton} onPress={handleEmergencyCall}>
-              <IconSymbol name="phone.fill" size={16} color={colors.card} />
-              <Text style={styles.emergencyCallText}>Call Emergency Contact</Text>
+            <Pressable style={styles.emergencyContact} onPress={handleEmergencyCall}>
+              <IconSymbol name="exclamationmark.triangle.fill" size={24} color="#E74C3C" />
+              <View style={styles.emergencyInfo}>
+                <Text style={styles.emergencyName}>{explorer.emergencyContact}</Text>
+                <Text style={styles.emergencyPhone}>{explorer.emergencyPhone}</Text>
+              </View>
+              <IconSymbol name="phone.fill" size={20} color="#E74C3C" />
             </Pressable>
           </View>
 
-          {/* Explorer Stats */}
-          <View style={styles.statsCard}>
-            <Text style={styles.cardTitle}>Explorer Statistics</Text>
-            
-            <View style={styles.statsGrid}>
-              <View style={styles.statItem}>
-                <IconSymbol name="calendar" size={24} color={colors.primary} />
-                <Text style={styles.statValue}>
-                  {Math.floor((new Date().getTime() - new Date(explorer.joinDate).getTime()) / (1000 * 60 * 60 * 24 * 30))}
-                </Text>
-                <Text style={styles.statLabel}>Months Active</Text>
-              </View>
-              
-              <View style={styles.statItem}>
-                <IconSymbol name="graduationcap.fill" size={24} color={colors.accent} />
-                <Text style={styles.statValue}>8</Text>
-                <Text style={styles.statLabel}>Training Completed</Text>
-              </View>
-              
-              <View style={styles.statItem}>
-                <IconSymbol name="clock.fill" size={24} color={colors.secondary} />
-                <Text style={styles.statValue}>124</Text>
-                <Text style={styles.statLabel}>Service Hours</Text>
-              </View>
-              
-              <View style={styles.statItem}>
-                <IconSymbol name="star.fill" size={24} color="#ffd700" />
-                <Text style={styles.statValue}>2</Text>
-                <Text style={styles.statLabel}>Commendations</Text>
+          {/* Special Rank Information */}
+          {isSpecial && (
+            <View style={styles.specialSection}>
+              <Text style={styles.sectionTitle}>Special Rank Information</Text>
+              <View style={styles.specialInfo}>
+                <IconSymbol name="star.fill" size={32} color="#FFD700" />
+                <View style={styles.specialInfoContent}>
+                  <Text style={styles.specialInfoTitle}>Command Authority</Text>
+                  <Text style={styles.specialInfoText}>
+                    This member holds a special rank with command authority and additional responsibilities within the Daytona Beach Police Explorer program.
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
+          )}
 
-          {/* Recent Activity */}
-          <View style={styles.activityCard}>
-            <Text style={styles.cardTitle}>Recent Activity</Text>
+          {/* Actions */}
+          <View style={styles.actionsSection}>
+            <Pressable style={styles.actionButton} onPress={() => handleCall(explorer.phone)}>
+              <IconSymbol name="phone.fill" size={20} color={colors.card} />
+              <Text style={styles.actionButtonText}>Call</Text>
+            </Pressable>
             
-            <View style={styles.activityItem}>
-              <View style={[styles.activityIcon, { backgroundColor: colors.primary }]}>
-                <IconSymbol name="graduationcap.fill" size={16} color={colors.card} />
-              </View>
-              <View style={styles.activityContent}>
-                <Text style={styles.activityTitle}>Completed First Aid Training</Text>
-                <Text style={styles.activityDate}>2 days ago</Text>
-              </View>
-            </View>
+            <Pressable style={styles.actionButton} onPress={() => handleEmail(explorer.email)}>
+              <IconSymbol name="envelope.fill" size={20} color={colors.card} />
+              <Text style={styles.actionButtonText}>Email</Text>
+            </Pressable>
             
-            <View style={styles.activityItem}>
-              <View style={[styles.activityIcon, { backgroundColor: colors.secondary }]}>
-                <IconSymbol name="person.3.fill" size={16} color={colors.card} />
-              </View>
-              <View style={styles.activityContent}>
-                <Text style={styles.activityTitle}>Attended Monthly Meeting</Text>
-                <Text style={styles.activityDate}>1 week ago</Text>
-              </View>
-            </View>
-            
-            <View style={styles.activityItem}>
-              <View style={[styles.activityIcon, { backgroundColor: colors.accent }]}>
-                <IconSymbol name="heart.fill" size={16} color={colors.text} />
-              </View>
-              <View style={styles.activityContent}>
-                <Text style={styles.activityTitle}>Volunteered at Community Event</Text>
-                <Text style={styles.activityDate}>2 weeks ago</Text>
-              </View>
-            </View>
-          </View>
-
-          {/* Quick Actions */}
-          <View style={styles.actionsCard}>
-            <Text style={styles.cardTitle}>Quick Actions</Text>
-            
-            <View style={styles.actionsGrid}>
-              <Pressable style={styles.actionButton} onPress={() => Alert.alert("Send Message", "Messaging feature coming soon!")}>
-                <IconSymbol name="message.fill" size={20} color={colors.primary} />
-                <Text style={styles.actionText}>Message</Text>
-              </Pressable>
-              
-              <Pressable style={styles.actionButton} onPress={() => Alert.alert("View Schedule", "Schedule viewing coming soon!")}>
-                <IconSymbol name="calendar" size={20} color={colors.secondary} />
-                <Text style={styles.actionText}>Schedule</Text>
-              </Pressable>
-              
-              <Pressable style={styles.actionButton} onPress={() => Alert.alert("View Reports", "Reports feature coming soon!")}>
-                <IconSymbol name="doc.text" size={20} color={colors.accent} />
-                <Text style={styles.actionText}>Reports</Text>
-              </Pressable>
-              
-              <Pressable style={styles.actionButton} onPress={() => Alert.alert("More Options", "Additional options coming soon!")}>
-                <IconSymbol name="ellipsis.circle" size={20} color={colors.textSecondary} />
-                <Text style={styles.actionText}>More</Text>
-              </Pressable>
-            </View>
+            <Pressable style={styles.emergencyButton} onPress={handleEmergencyCall}>
+              <IconSymbol name="exclamationmark.triangle.fill" size={20} color={colors.card} />
+              <Text style={styles.actionButtonText}>Emergency</Text>
+            </Pressable>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -249,235 +265,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   contentContainer: {
-    paddingBottom: 32,
-  },
-  explorerHeader: {
-    alignItems: 'center',
-    paddingVertical: 32,
-    paddingHorizontal: 20,
-  },
-  avatarContainer: {
-    position: 'relative',
-    marginBottom: 16,
-  },
-  statusBadge: {
-    position: 'absolute',
-    bottom: -5,
-    right: -5,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: colors.background,
-  },
-  statusText: {
-    fontSize: 10,
-    fontWeight: '600',
-    color: colors.card,
-  },
-  explorerName: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: colors.text,
-    marginBottom: 4,
-  },
-  explorerRank: {
-    fontSize: 18,
-    color: colors.primary,
-    fontWeight: '600',
-    marginBottom: 4,
-  },
-  joinDate: {
-    fontSize: 14,
-    color: colors.textSecondary,
-  },
-  contactCard: {
-    backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 16,
-    marginHorizontal: 16,
-    marginBottom: 16,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-    elevation: 3,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: colors.text,
-    marginBottom: 16,
-  },
-  contactRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.highlight,
-  },
-  contactContent: {
-    flex: 1,
-    marginLeft: 12,
-  },
-  contactLabel: {
-    fontSize: 12,
-    color: colors.textSecondary,
-    marginBottom: 2,
-  },
-  contactValue: {
-    fontSize: 16,
-    color: colors.text,
-    fontWeight: '500',
-  },
-  emergencyCard: {
-    backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 16,
-    marginHorizontal: 16,
-    marginBottom: 16,
-    borderWidth: 2,
-    borderColor: '#dc3545',
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-    elevation: 3,
-  },
-  emergencyHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  emergencyTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#dc3545',
-    marginLeft: 8,
-  },
-  emergencyInfo: {
-    marginBottom: 16,
-  },
-  emergencyContact: {
-    fontSize: 16,
-    color: colors.text,
-    fontWeight: '500',
-    marginBottom: 4,
-  },
-  emergencyPhone: {
-    fontSize: 16,
-    color: colors.primary,
-  },
-  emergencyCallButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#dc3545',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-  },
-  emergencyCallText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.card,
-    marginLeft: 8,
-  },
-  statsCard: {
-    backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 16,
-    marginHorizontal: 16,
-    marginBottom: 16,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-    elevation: 3,
-  },
-  statsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  statItem: {
-    width: '48%',
-    alignItems: 'center',
-    paddingVertical: 16,
-    marginBottom: 8,
-  },
-  statValue: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: colors.text,
-    marginTop: 8,
-  },
-  statLabel: {
-    fontSize: 12,
-    color: colors.textSecondary,
-    marginTop: 4,
-    textAlign: 'center',
-  },
-  activityCard: {
-    backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 16,
-    marginHorizontal: 16,
-    marginBottom: 16,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-    elevation: 3,
-  },
-  activityItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.highlight,
-  },
-  activityIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  activityContent: {
-    flex: 1,
-  },
-  activityTitle: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: colors.text,
-    marginBottom: 2,
-  },
-  activityDate: {
-    fontSize: 12,
-    color: colors.textSecondary,
-  },
-  actionsCard: {
-    backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 16,
-    marginHorizontal: 16,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-    elevation: 3,
-  },
-  actionsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  actionButton: {
-    width: '48%',
-    alignItems: 'center',
-    paddingVertical: 16,
-    marginBottom: 8,
-    borderRadius: 8,
-    backgroundColor: colors.highlight,
-  },
-  actionText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: colors.text,
-    marginTop: 8,
+    paddingBottom: 100,
   },
   errorContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    padding: 20,
   },
   errorText: {
     fontSize: 18,
@@ -492,8 +286,212 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   backButtonText: {
+    color: colors.card,
     fontSize: 16,
     fontWeight: '600',
+  },
+  profileHeader: {
+    backgroundColor: colors.card,
+    alignItems: 'center',
+    padding: 24,
+    marginBottom: 20,
+    position: 'relative',
+  },
+  specialProfileHeader: {
+    backgroundColor: '#FFFEF7',
+    borderWidth: 2,
+    borderColor: '#FFD700',
+  },
+  specialBadge: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFD700',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    gap: 6,
+  },
+  specialBadgeText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#000',
+  },
+  avatarContainer: {
+    marginBottom: 16,
+  },
+  name: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: colors.text,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  specialName: {
+    fontSize: 26,
+    fontWeight: '800',
+  },
+  rank: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  specialRankText: {
+    fontSize: 20,
+    fontWeight: '700',
+  },
+  statusBadge: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 16,
+  },
+  statusText: {
+    fontSize: 12,
+    fontWeight: '700',
     color: colors.card,
+  },
+  section: {
+    backgroundColor: colors.card,
+    marginHorizontal: 16,
+    marginBottom: 16,
+    borderRadius: 12,
+    padding: 16,
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+    elevation: 3,
+  },
+  specialSection: {
+    backgroundColor: '#FFFEF7',
+    marginHorizontal: 16,
+    marginBottom: 16,
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 2,
+    borderColor: '#FFD700',
+    boxShadow: '0px 4px 12px rgba(255, 215, 0, 0.3)',
+    elevation: 6,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: colors.text,
+    marginBottom: 16,
+  },
+  contactItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.highlight,
+  },
+  contactInfo: {
+    flex: 1,
+    marginLeft: 16,
+  },
+  contactLabel: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginBottom: 2,
+  },
+  contactValue: {
+    fontSize: 16,
+    color: colors.text,
+    fontWeight: '500',
+  },
+  infoItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.highlight,
+  },
+  infoContent: {
+    flex: 1,
+    marginLeft: 16,
+  },
+  infoLabel: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginBottom: 2,
+  },
+  infoValue: {
+    fontSize: 16,
+    color: colors.text,
+    fontWeight: '600',
+  },
+  emergencyContact: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF5F5',
+    padding: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#FED7D7',
+  },
+  emergencyInfo: {
+    flex: 1,
+    marginLeft: 16,
+  },
+  emergencyName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#E74C3C',
+    marginBottom: 2,
+  },
+  emergencyPhone: {
+    fontSize: 14,
+    color: '#C53030',
+  },
+  specialInfo: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 16,
+  },
+  specialInfoContent: {
+    flex: 1,
+  },
+  specialInfoTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#B8860B',
+    marginBottom: 8,
+  },
+  specialInfoText: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    lineHeight: 20,
+  },
+  actionsSection: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    gap: 12,
+    marginBottom: 20,
+  },
+  actionButton: {
+    flex: 1,
+    backgroundColor: colors.primary,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 16,
+    borderRadius: 12,
+    gap: 8,
+  },
+  emergencyButton: {
+    flex: 1,
+    backgroundColor: '#E74C3C',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 16,
+    borderRadius: 12,
+    gap: 8,
+  },
+  actionButtonText: {
+    color: colors.card,
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

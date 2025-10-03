@@ -6,18 +6,25 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, commonStyles } from '@/styles/commonStyles';
 import { IconSymbol } from '@/components/IconSymbol';
 import RosterCard from '@/components/RosterCard';
-import { roster, Explorer } from '@/data/roster';
+import { roster, Explorer, isSpecialRank } from '@/data/roster';
 
 export default function RosterScreen() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<'all' | 'active' | 'probationary' | 'inactive'>('all');
+  const [selectedFilter, setSelectedFilter] = useState<'all' | 'active' | 'probationary' | 'inactive' | 'special'>('all');
 
   // Filter roster based on search and status
   const filteredRoster = roster.filter(explorer => {
     const matchesSearch = explorer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          explorer.rank.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter = selectedFilter === 'all' || explorer.status === selectedFilter;
+    
+    let matchesFilter = true;
+    if (selectedFilter === 'special') {
+      matchesFilter = isSpecialRank(explorer.rank);
+    } else if (selectedFilter !== 'all') {
+      matchesFilter = explorer.status === selectedFilter;
+    }
+    
     return matchesSearch && matchesFilter;
   });
 
@@ -29,12 +36,37 @@ export default function RosterScreen() {
     return roster.filter(explorer => explorer.status === status).length;
   };
 
+  const getSpecialRankCount = () => {
+    return roster.filter(explorer => isSpecialRank(explorer.rank)).length;
+  };
+
   const filterButtons = [
     { key: 'all', label: 'All', count: roster.length },
+    { key: 'special', label: 'Special Ranks', count: getSpecialRankCount() },
     { key: 'active', label: 'Active', count: getStatusCount('active') },
     { key: 'probationary', label: 'Probationary', count: getStatusCount('probationary') },
     { key: 'inactive', label: 'Inactive', count: getStatusCount('inactive') },
   ] as const;
+
+  // Sort roster to show special ranks first
+  const sortedRoster = [...filteredRoster].sort((a, b) => {
+    const aIsSpecial = isSpecialRank(a.rank);
+    const bIsSpecial = isSpecialRank(b.rank);
+    
+    if (aIsSpecial && !bIsSpecial) return -1;
+    if (!aIsSpecial && bIsSpecial) return 1;
+    
+    // If both are special or both are regular, sort by rank hierarchy
+    const rankOrder = ['Major', 'Captain', 'Lieutenant', 'Sgt', 'Officer', 'Advisor', 'Senior Explorer', 'Explorer'];
+    const aRankIndex = rankOrder.findIndex(rank => a.rank.toLowerCase().includes(rank.toLowerCase()));
+    const bRankIndex = rankOrder.findIndex(rank => b.rank.toLowerCase().includes(rank.toLowerCase()));
+    
+    if (aRankIndex !== -1 && bRankIndex !== -1) {
+      return aRankIndex - bRankIndex;
+    }
+    
+    return a.name.localeCompare(b.name);
+  });
 
   return (
     <>
@@ -58,19 +90,19 @@ export default function RosterScreen() {
             <View style={styles.statCard}>
               <IconSymbol name="person.3.fill" size={32} color={colors.primary} />
               <Text style={styles.statNumber}>{roster.length}</Text>
-              <Text style={styles.statLabel}>Total Explorers</Text>
+              <Text style={styles.statLabel}>Total Members</Text>
+            </View>
+            
+            <View style={styles.specialStatCard}>
+              <IconSymbol name="star.fill" size={32} color="#FFD700" />
+              <Text style={styles.statNumber}>{getSpecialRankCount()}</Text>
+              <Text style={styles.statLabel}>Special Ranks</Text>
             </View>
             
             <View style={styles.statCard}>
               <IconSymbol name="checkmark.circle.fill" size={32} color="#28a745" />
               <Text style={styles.statNumber}>{getStatusCount('active')}</Text>
               <Text style={styles.statLabel}>Active</Text>
-            </View>
-            
-            <View style={styles.statCard}>
-              <IconSymbol name="clock.fill" size={32} color={colors.accent} />
-              <Text style={styles.statNumber}>{getStatusCount('probationary')}</Text>
-              <Text style={styles.statLabel}>Probationary</Text>
             </View>
           </View>
 
@@ -80,7 +112,7 @@ export default function RosterScreen() {
               <IconSymbol name="magnifyingglass" size={20} color={colors.textSecondary} />
               <TextInput
                 style={styles.searchInput}
-                placeholder="Search explorers..."
+                placeholder="Search members..."
                 placeholderTextColor={colors.textSecondary}
                 value={searchQuery}
                 onChangeText={setSearchQuery}
@@ -105,13 +137,17 @@ export default function RosterScreen() {
                   key={filter.key}
                   style={[
                     styles.filterButton,
-                    selectedFilter === filter.key && styles.filterButtonActive
+                    selectedFilter === filter.key && styles.filterButtonActive,
+                    filter.key === 'special' && styles.specialFilterButton,
+                    filter.key === 'special' && selectedFilter === filter.key && styles.specialFilterButtonActive
                   ]}
                   onPress={() => setSelectedFilter(filter.key)}
                 >
                   <Text style={[
                     styles.filterButtonText,
-                    selectedFilter === filter.key && styles.filterButtonTextActive
+                    selectedFilter === filter.key && styles.filterButtonTextActive,
+                    filter.key === 'special' && styles.specialFilterButtonText,
+                    filter.key === 'special' && selectedFilter === filter.key && styles.specialFilterButtonTextActive
                   ]}>
                     {filter.label} ({filter.count})
                   </Text>
@@ -120,15 +156,36 @@ export default function RosterScreen() {
             </ScrollView>
           </View>
 
+          {/* Special Ranks Highlight */}
+          {selectedFilter === 'all' && (
+            <View style={styles.specialRanksHighlight}>
+              <View style={styles.specialRanksHeader}>
+                <IconSymbol name="star.fill" size={24} color="#FFD700" />
+                <Text style={styles.specialRanksTitle}>Special Ranks</Text>
+                <Pressable 
+                  style={styles.viewAllButton}
+                  onPress={() => setSelectedFilter('special')}
+                >
+                  <Text style={styles.viewAllText}>View All</Text>
+                  <IconSymbol name="chevron.right" size={16} color={colors.primary} />
+                </Pressable>
+              </View>
+              <Text style={styles.specialRanksSubtitle}>
+                Officers, Majors, Captains, Lieutenants, Sergeants, and Advisors
+              </Text>
+            </View>
+          )}
+
           {/* Roster List */}
           <View style={styles.rosterSection}>
             <Text style={styles.sectionTitle}>
-              {filteredRoster.length} Explorer{filteredRoster.length !== 1 ? 's' : ''}
+              {filteredRoster.length} Member{filteredRoster.length !== 1 ? 's' : ''}
               {searchQuery && ` matching "${searchQuery}"`}
+              {selectedFilter === 'special' && ' with Special Ranks'}
             </Text>
 
-            {filteredRoster.length > 0 ? (
-              filteredRoster.map((explorer) => (
+            {sortedRoster.length > 0 ? (
+              sortedRoster.map((explorer) => (
                 <RosterCard
                   key={explorer.id}
                   explorer={explorer}
@@ -140,37 +197,64 @@ export default function RosterScreen() {
                 <IconSymbol name="person.badge.minus" size={40} color={colors.textSecondary} />
                 <Text style={styles.noResultsText}>
                   {searchQuery 
-                    ? `No explorers found matching "${searchQuery}"`
-                    : 'No explorers found'
+                    ? `No members found matching "${searchQuery}"`
+                    : selectedFilter === 'special'
+                    ? 'No members with special ranks found'
+                    : 'No members found'
                   }
                 </Text>
               </View>
             )}
           </View>
 
-          {/* Leadership Section */}
-          <View style={styles.leadershipSection}>
-            <Text style={styles.sectionTitle}>Leadership</Text>
-            {roster
-              .filter(explorer => explorer.rank.includes('Captain') || explorer.rank.includes('Senior'))
-              .map((leader) => (
-                <View key={leader.id} style={styles.leaderCard}>
-                  <IconSymbol 
-                    name={leader.rank.includes('Captain') ? 'star.fill' : 'chevron.up.circle.fill'} 
-                    size={24} 
-                    color={colors.primary} 
-                  />
-                  <View style={styles.leaderInfo}>
-                    <Text style={styles.leaderName}>{leader.name}</Text>
-                    <Text style={styles.leaderRank}>{leader.rank}</Text>
+          {/* Leadership Section - Only show if not filtering by special ranks */}
+          {selectedFilter !== 'special' && (
+            <View style={styles.leadershipSection}>
+              <Text style={styles.sectionTitle}>Command Structure</Text>
+              {roster
+                .filter(explorer => isSpecialRank(explorer.rank))
+                .sort((a, b) => {
+                  const rankOrder = ['Major', 'Captain', 'Lieutenant', 'Sgt', 'Officer', 'Advisor'];
+                  const aRankIndex = rankOrder.findIndex(rank => a.rank.toLowerCase().includes(rank.toLowerCase()));
+                  const bRankIndex = rankOrder.findIndex(rank => b.rank.toLowerCase().includes(rank.toLowerCase()));
+                  return aRankIndex - bRankIndex;
+                })
+                .map((leader) => (
+                  <View key={leader.id} style={styles.leaderCard}>
+                    <IconSymbol 
+                      name={leader.rank.toLowerCase().includes('major') ? 'star.square.fill' :
+                            leader.rank.toLowerCase().includes('captain') ? 'star.fill' :
+                            leader.rank.toLowerCase().includes('lieutenant') ? 'shield.fill' :
+                            leader.rank.toLowerCase().includes('officer') ? 'person.badge.fill' :
+                            leader.rank.toLowerCase().includes('sgt') ? 'chevron.up.square.fill' :
+                            'graduationcap.fill'} 
+                      size={24} 
+                      color={leader.rank.toLowerCase().includes('major') ? '#FFD700' :
+                             leader.rank.toLowerCase().includes('captain') ? '#FF6B35' :
+                             leader.rank.toLowerCase().includes('lieutenant') ? '#4A90E2' :
+                             leader.rank.toLowerCase().includes('officer') ? '#50C878' :
+                             leader.rank.toLowerCase().includes('sgt') ? '#9B59B6' :
+                             '#E74C3C'} 
+                    />
+                    <View style={styles.leaderInfo}>
+                      <Text style={styles.leaderName}>{leader.name}</Text>
+                      <Text style={[styles.leaderRank, {
+                        color: leader.rank.toLowerCase().includes('major') ? '#FFD700' :
+                               leader.rank.toLowerCase().includes('captain') ? '#FF6B35' :
+                               leader.rank.toLowerCase().includes('lieutenant') ? '#4A90E2' :
+                               leader.rank.toLowerCase().includes('officer') ? '#50C878' :
+                               leader.rank.toLowerCase().includes('sgt') ? '#9B59B6' :
+                               '#E74C3C'
+                      }]}>{leader.rank}</Text>
+                    </View>
+                    <Pressable onPress={() => handleExplorerPress(leader.id)}>
+                      <IconSymbol name="chevron.right" size={16} color={colors.textSecondary} />
+                    </Pressable>
                   </View>
-                  <Pressable onPress={() => handleExplorerPress(leader.id)}>
-                    <IconSymbol name="chevron.right" size={16} color={colors.textSecondary} />
-                  </Pressable>
-                </View>
-              ))
-            }
-          </View>
+                ))
+              }
+            </View>
+          )}
         </ScrollView>
       </SafeAreaView>
     </>
@@ -199,6 +283,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
     elevation: 3,
+  },
+  specialStatCard: {
+    flex: 1,
+    backgroundColor: '#FFFEF7',
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#FFD700',
+    boxShadow: '0px 4px 12px rgba(255, 215, 0, 0.3)',
+    elevation: 6,
   },
   statNumber: {
     fontSize: 24,
@@ -250,6 +345,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderColor: colors.primary,
   },
+  specialFilterButton: {
+    backgroundColor: '#FFFEF7',
+    borderColor: '#FFD700',
+  },
+  specialFilterButtonActive: {
+    backgroundColor: '#FFD700',
+    borderColor: '#FFD700',
+  },
   filterButtonText: {
     fontSize: 14,
     fontWeight: '500',
@@ -257,6 +360,50 @@ const styles = StyleSheet.create({
   },
   filterButtonTextActive: {
     color: colors.card,
+  },
+  specialFilterButtonText: {
+    color: '#B8860B',
+    fontWeight: '600',
+  },
+  specialFilterButtonTextActive: {
+    color: '#000',
+    fontWeight: '700',
+  },
+  specialRanksHighlight: {
+    marginHorizontal: 16,
+    marginBottom: 20,
+    backgroundColor: '#FFFEF7',
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 2,
+    borderColor: '#FFD700',
+  },
+  specialRanksHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  specialRanksTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#B8860B',
+    marginLeft: 8,
+    flex: 1,
+  },
+  viewAllButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  viewAllText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.primary,
+  },
+  specialRanksSubtitle: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    fontStyle: 'italic',
   },
   rosterSection: {
     marginBottom: 32,
@@ -303,7 +450,7 @@ const styles = StyleSheet.create({
   },
   leaderRank: {
     fontSize: 14,
-    color: colors.primary,
+    fontWeight: '700',
     marginTop: 2,
   },
 });
