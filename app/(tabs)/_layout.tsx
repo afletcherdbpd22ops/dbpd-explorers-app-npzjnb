@@ -28,6 +28,12 @@ export default function TabLayout() {
       label: 'Roster',
     },
     {
+      name: 'meetings',
+      route: '/(tabs)/meetings',
+      icon: 'person.2.fill',
+      label: 'Meetings',
+    },
+    {
       name: 'profile',
       route: '/(tabs)/profile',
       icon: 'person.fill',
@@ -51,6 +57,10 @@ export default function TabLayout() {
           <Icon sf="person.3.fill" drawable="ic_roster" />
           <Label>Roster</Label>
         </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="meetings">
+          <Icon sf="person.2.fill" drawable="ic_meetings" />
+          <Label>Meetings</Label>
+        </NativeTabs.Trigger>
         <NativeTabs.Trigger name="profile">
           <Icon sf="person.fill" drawable="ic_profile" />
           <Label>Profile</Label>
@@ -71,6 +81,7 @@ export default function TabLayout() {
         <Stack.Screen name="(home)" />
         <Stack.Screen name="calendar" />
         <Stack.Screen name="roster" />
+        <Stack.Screen name="meetings" />
         <Stack.Screen name="profile" />
       </Stack>
       <FloatingTabBar tabs={tabs} />

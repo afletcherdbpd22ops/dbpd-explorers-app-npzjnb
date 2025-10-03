@@ -1,46 +1,82 @@
 
 import React from "react";
 import { View, Text, StyleSheet, ScrollView, Pressable, Alert } from "react-native";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IconSymbol } from "@/components/IconSymbol";
 import { colors, commonStyles } from "@/styles/commonStyles";
+import { currentUser } from "@/data/auth";
+import { roster } from "@/data/roster";
 
 export default function ProfileScreen() {
-  // Mock user data - in a real app this would come from authentication
-  const userProfile = {
-    name: "Alex Johnson",
-    rank: "Senior Explorer",
-    badgeNumber: "E-2024-015",
-    joinDate: "August 15, 2022",
-    email: "alex.johnson@email.com",
-    phone: "(386) 555-0123",
-    emergencyContact: "Sarah Johnson (Mother)",
-    emergencyPhone: "(386) 555-0124",
-    status: "Active",
-    completedTraining: 12,
-    totalHours: 156,
-    commendations: 3,
-  };
+  const router = useRouter();
+  
+  // Get current user's explorer profile
+  const userProfile = currentUser.explorerId 
+    ? roster.find(explorer => explorer.id === currentUser.explorerId)
+    : null;
+
+  if (!userProfile) {
+    return (
+      <>
+        <Stack.Screen
+          options={{
+            title: "Profile",
+            headerStyle: {
+              backgroundColor: colors.background,
+            },
+            headerTintColor: colors.text,
+          }}
+        />
+        <SafeAreaView style={[commonStyles.wrapper]} edges={['bottom']}>
+          <View style={styles.noProfileContainer}>
+            <IconSymbol name="person.circle" size={80} color={colors.textSecondary} />
+            <Text style={styles.noProfileTitle}>Profile Not Found</Text>
+            <Text style={styles.noProfileText}>
+              Your profile information could not be loaded. Please contact an advisor.
+            </Text>
+            <Pressable 
+              style={styles.signInButton}
+              onPress={() => Alert.alert("Sign In", "Email-based sign in feature coming soon!")}
+            >
+              <IconSymbol name="envelope.fill" size={20} color={colors.text} />
+              <Text style={styles.signInButtonText}>Sign In with Email</Text>
+            </Pressable>
+          </View>
+        </SafeAreaView>
+      </>
+    );
+  }
 
   const handleEditProfile = () => {
     Alert.alert("Edit Profile", "Profile editing feature coming soon!");
   };
 
   const handleEmergencyContact = () => {
-    Alert.alert("Emergency Contact", `Calling ${userProfile.emergencyContact} at ${userProfile.emergencyPhone}`);
-  };
-
-  const handleLogout = () => {
     Alert.alert(
-      "Logout",
-      "Are you sure you want to logout?",
+      "Emergency Contact", 
+      `Calling ${userProfile.emergencyContact} at ${userProfile.emergencyPhone}`,
       [
         { text: "Cancel", style: "cancel" },
-        { text: "Logout", style: "destructive", onPress: () => console.log("Logout pressed") }
+        { text: "Call", onPress: () => console.log("Calling emergency contact") }
       ]
     );
   };
+
+  const handleSignOut = () => {
+    Alert.alert(
+      "Sign Out",
+      "Are you sure you want to sign out?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Sign Out", style: "destructive", onPress: () => console.log("Sign out pressed") }
+      ]
+    );
+  };
+
+  const attendanceRate = userProfile.totalMeetings && userProfile.totalMeetings > 0 
+    ? Math.round((userProfile.meetingsAttended! / userProfile.totalMeetings) * 100)
+    : 0;
 
   return (
     <>
@@ -70,33 +106,47 @@ export default function ProfileScreen() {
               <View style={styles.avatarCircle}>
                 <IconSymbol name="person.circle.fill" size={80} color={colors.accent} />
               </View>
-              <View style={[styles.statusBadge, { backgroundColor: '#28a745' }]}>
-                <Text style={styles.statusText}>ACTIVE</Text>
+              <View style={[styles.statusBadge, { 
+                backgroundColor: userProfile.status === 'active' ? '#28a745' : 
+                               userProfile.status === 'probationary' ? '#ffc107' : '#dc3545'
+              }]}>
+                <Text style={styles.statusText}>
+                  {userProfile.status.toUpperCase()}
+                </Text>
               </View>
             </View>
             <Text style={styles.name}>{userProfile.name}</Text>
-            <Text style={styles.rank}>{userProfile.rank}</Text>
-            <Text style={styles.badgeNumber}>Badge #{userProfile.badgeNumber}</Text>
+            <Text style={[styles.rank, {
+              color: userProfile.isSpecialRank ? colors.accent : colors.textSecondary
+            }]}>
+              {userProfile.rank}
+            </Text>
+            <Text style={styles.joinDate}>
+              Member since {new Date(userProfile.joinDate).toLocaleDateString('en-US', {
+                month: 'long',
+                year: 'numeric'
+              })}
+            </Text>
           </View>
 
           {/* Stats Cards */}
           <View style={styles.statsContainer}>
             <View style={styles.statCard}>
-              <IconSymbol name="graduationcap.fill" size={24} color={colors.primary} />
-              <Text style={styles.statNumber}>{userProfile.completedTraining}</Text>
-              <Text style={styles.statLabel}>Training Completed</Text>
-            </View>
-            
-            <View style={styles.statCard}>
-              <IconSymbol name="clock.fill" size={24} color={colors.accent} />
-              <Text style={styles.statNumber}>{userProfile.totalHours}</Text>
+              <IconSymbol name="clock.fill" size={24} color={colors.primary} />
+              <Text style={styles.statNumber}>{userProfile.communityServiceHours || 0}</Text>
               <Text style={styles.statLabel}>Service Hours</Text>
             </View>
             
             <View style={styles.statCard}>
-              <IconSymbol name="star.fill" size={24} color="#ffd700" />
-              <Text style={styles.statNumber}>{userProfile.commendations}</Text>
-              <Text style={styles.statLabel}>Commendations</Text>
+              <IconSymbol name="calendar.badge.checkmark" size={24} color={colors.accent} />
+              <Text style={styles.statNumber}>{userProfile.detailsAttended || 0}</Text>
+              <Text style={styles.statLabel}>Details Attended</Text>
+            </View>
+            
+            <View style={styles.statCard}>
+              <IconSymbol name="person.2.fill" size={24} color="#28a745" />
+              <Text style={styles.statNumber}>{attendanceRate}%</Text>
+              <Text style={styles.statLabel}>Meeting Attendance</Text>
             </View>
           </View>
 
@@ -125,11 +175,70 @@ export default function ProfileScreen() {
                 <IconSymbol name="calendar" size={20} color={colors.primary} />
                 <View style={styles.infoContent}>
                   <Text style={styles.infoLabel}>Join Date</Text>
-                  <Text style={styles.infoValue}>{userProfile.joinDate}</Text>
+                  <Text style={styles.infoValue}>
+                    {new Date(userProfile.joinDate).toLocaleDateString()}
+                  </Text>
                 </View>
               </View>
             </View>
           </View>
+
+          {/* Certifications */}
+          {userProfile.certifications && userProfile.certifications.length > 0 && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Certifications</Text>
+              <View style={styles.certificationsContainer}>
+                {userProfile.certifications.map((cert, index) => (
+                  <View key={index} style={styles.certificationBadge}>
+                    <IconSymbol name="checkmark.seal.fill" size={16} color="#28a745" />
+                    <Text style={styles.certificationText}>{cert}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          )}
+
+          {/* Permissions */}
+          {userProfile.isSpecialRank && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Permissions</Text>
+              <View style={styles.permissionsCard}>
+                <View style={styles.permissionItem}>
+                  <IconSymbol 
+                    name={userProfile.canEditCalendar ? "checkmark.circle.fill" : "xmark.circle.fill"} 
+                    size={20} 
+                    color={userProfile.canEditCalendar ? "#28a745" : "#dc3545"} 
+                  />
+                  <Text style={styles.permissionText}>Edit Calendar & Events</Text>
+                </View>
+                
+                <View style={styles.permissionItem}>
+                  <IconSymbol 
+                    name={userProfile.canEditRoster ? "checkmark.circle.fill" : "xmark.circle.fill"} 
+                    size={20} 
+                    color={userProfile.canEditRoster ? "#28a745" : "#dc3545"} 
+                  />
+                  <Text style={styles.permissionText}>Edit Roster & Attendance</Text>
+                </View>
+                
+                <View style={styles.permissionItem}>
+                  <IconSymbol 
+                    name={currentUser.permissions.canViewApplications ? "checkmark.circle.fill" : "xmark.circle.fill"} 
+                    size={20} 
+                    color={currentUser.permissions.canViewApplications ? "#28a745" : "#dc3545"} 
+                  />
+                  <Text style={styles.permissionText}>View Applications</Text>
+                </View>
+                
+                {userProfile.isAdvisor && (
+                  <View style={styles.permissionItem}>
+                    <IconSymbol name="checkmark.circle.fill" size={20} color="#28a745" />
+                    <Text style={styles.permissionText}>Full Administrator Access</Text>
+                  </View>
+                )}
+              </View>
+            </View>
+          )}
 
           {/* Emergency Contact */}
           <View style={styles.section}>
@@ -154,24 +263,36 @@ export default function ProfileScreen() {
             <Text style={styles.sectionTitle}>Quick Actions</Text>
             
             <View style={styles.actionsGrid}>
-              <Pressable style={styles.actionCard} onPress={() => Alert.alert("Documents", "Document access coming soon!")}>
+              <Pressable 
+                style={styles.actionCard} 
+                onPress={() => Alert.alert("Documents", "Document access coming soon!")}
+              >
                 <IconSymbol name="doc.fill" size={24} color={colors.primary} />
                 <Text style={styles.actionText}>Documents</Text>
               </Pressable>
               
-              <Pressable style={styles.actionCard} onPress={() => Alert.alert("Certifications", "Certification tracking coming soon!")}>
-                <IconSymbol name="checkmark.seal.fill" size={24} color="#28a745" />
-                <Text style={styles.actionText}>Certifications</Text>
-              </Pressable>
-              
-              <Pressable style={styles.actionCard} onPress={() => Alert.alert("Settings", "Settings coming soon!")}>
+              <Pressable 
+                style={styles.actionCard} 
+                onPress={() => Alert.alert("Settings", "Settings coming soon!")}
+              >
                 <IconSymbol name="gear.circle.fill" size={24} color={colors.secondary} />
                 <Text style={styles.actionText}>Settings</Text>
               </Pressable>
               
-              <Pressable style={styles.actionCard} onPress={handleLogout}>
+              <Pressable 
+                style={styles.actionCard} 
+                onPress={() => Alert.alert("Help", "Help & support coming soon!")}
+              >
+                <IconSymbol name="questionmark.circle.fill" size={24} color="#17a2b8" />
+                <Text style={styles.actionText}>Help</Text>
+              </Pressable>
+              
+              <Pressable 
+                style={styles.actionCard} 
+                onPress={handleSignOut}
+              >
                 <IconSymbol name="rectangle.portrait.and.arrow.right" size={24} color="#dc3545" />
-                <Text style={[styles.actionText, { color: '#dc3545' }]}>Logout</Text>
+                <Text style={[styles.actionText, { color: '#dc3545' }]}>Sign Out</Text>
               </Pressable>
             </View>
           </View>
@@ -187,7 +308,44 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   contentContainer: {
-    paddingBottom: 100, // Space for floating tab bar
+    paddingBottom: 100,
+  },
+  noProfileContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 32,
+  },
+  noProfileTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: colors.text,
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  noProfileText: {
+    fontSize: 16,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    lineHeight: 24,
+    marginBottom: 24,
+  },
+  signInButton: {
+    backgroundColor: colors.primary,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    gap: 8,
+  },
+  signInButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.text,
+  },
+  headerButton: {
+    padding: 6,
   },
   profileHeader: {
     alignItems: 'center',
@@ -231,11 +389,10 @@ const styles = StyleSheet.create({
   },
   rank: {
     fontSize: 18,
-    color: colors.accent,
     fontWeight: '600',
     marginBottom: 4,
   },
-  badgeNumber: {
+  joinDate: {
     fontSize: 14,
     color: colors.textSecondary,
   },
@@ -301,6 +458,42 @@ const styles = StyleSheet.create({
   },
   infoValue: {
     fontSize: 16,
+    color: colors.background,
+  },
+  certificationsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  certificationBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#D4EDDA',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    gap: 6,
+  },
+  certificationText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#155724',
+  },
+  permissionsCard: {
+    backgroundColor: colors.cardLight,
+    borderRadius: 12,
+    padding: 16,
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.2)',
+    elevation: 3,
+    gap: 12,
+  },
+  permissionItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  permissionText: {
+    fontSize: 14,
     color: colors.background,
   },
   emergencyCard: {
@@ -369,8 +562,5 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: colors.background,
     marginTop: 8,
-  },
-  headerButton: {
-    padding: 6,
   },
 });

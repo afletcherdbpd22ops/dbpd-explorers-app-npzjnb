@@ -39,7 +39,7 @@ interface FloatingTabBarProps {
 
 export default function FloatingTabBar({
   tabs,
-  containerWidth = 240,
+  containerWidth = Math.min(screenWidth - 40, tabs.length * 70), // Dynamic width based on tab count
   borderRadius = 25,
   bottomMargin
 }: FloatingTabBarProps) {
@@ -244,9 +244,10 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   tabLabel: {
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: '500',
     marginTop: 2,
+    textAlign: 'center',
     // Dynamic styling applied in component
   },
 });
