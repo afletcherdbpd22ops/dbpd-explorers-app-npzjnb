@@ -52,11 +52,12 @@ export default function HomeScreen() {
           {/* Logo and Welcome Section */}
           <View style={styles.logoSection}>
             <View style={styles.logoContainer}>
-              {/* Logo placeholder - you can replace this with an actual logo image */}
-              <View style={styles.logoPlaceholder}>
-                <IconSymbol name="shield.fill" size={80} color={colors.accent} />
-                <Text style={styles.logoText}>LOGO</Text>
-              </View>
+              {/* Daytona Beach Police Explorer Logo */}
+              <Image 
+                source={require('@/assets/images/1c8ade93-d472-40b0-99cf-390ab8676c2a.png')}
+                style={styles.logoImage}
+                resizeMode="contain"
+              />
             </View>
             <Text style={styles.welcomeTitle}>Daytona Beach</Text>
             <Text style={styles.welcomeTitle}>Police Explorers</Text>
@@ -242,22 +243,13 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     alignItems: 'center',
   },
-  logoPlaceholder: {
+  logoImage: {
     width: 120,
     height: 120,
     borderRadius: 60,
     backgroundColor: colors.cardLight,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 12,
     boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.2)',
     elevation: 6,
-  },
-  logoText: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: colors.accent,
-    marginTop: 4,
   },
   welcomeTitle: {
     fontSize: 28,
