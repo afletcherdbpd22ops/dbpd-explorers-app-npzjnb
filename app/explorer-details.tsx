@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, ScrollView, Pressable, Alert, Linking } from 'r
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { IconSymbol } from '@/components/IconSymbol';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { roster, Explorer, isSpecialRank } from '@/data/roster';
+import { roster, Explorer, isSpecialRank, getRosterCardColor } from '@/data/roster';
 import { colors, commonStyles } from '@/styles/commonStyles';
 
 export default function ExplorerDetailsScreen() {
@@ -93,6 +93,16 @@ export default function ExplorerDetailsScreen() {
   };
 
   const isSpecial = isSpecialRank(explorer.rank);
+  const cardColor = getRosterCardColor(explorer);
+
+  // Calculate attendance percentages
+  const weeklyAttendanceRate = explorer.totalWeeklyMeetings 
+    ? Math.round((explorer.weeklyMeetingAttendance || 0) / explorer.totalWeeklyMeetings * 100)
+    : 0;
+  
+  const detailAttendanceRate = explorer.totalDetailEvents 
+    ? Math.round((explorer.detailEventAttendance || 0) / explorer.totalDetailEvents * 100)
+    : 0;
 
   return (
     <>
@@ -112,7 +122,7 @@ export default function ExplorerDetailsScreen() {
           showsVerticalScrollIndicator={false}
         >
           {/* Profile Header */}
-          <View style={[styles.profileHeader, isSpecial && styles.specialProfileHeader]}>
+          <View style={[styles.profileHeader, { backgroundColor: cardColor }, isSpecial && styles.specialProfileHeader]}>
             {isSpecial && (
               <View style={styles.specialBadge}>
                 <IconSymbol name="star.fill" size={16} color="#FFD700" />
@@ -144,6 +154,68 @@ export default function ExplorerDetailsScreen() {
               <Text style={styles.statusText}>{explorer.status.toUpperCase()}</Text>
             </View>
           </View>
+
+          {/* Attendance & Service Statistics */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Attendance & Service Record</Text>
+            
+            <View style={styles.statsGrid}>
+              <View style={styles.statCard}>
+                <IconSymbol name="calendar" size={24} color="#2E86AB" />
+                <Text style={styles.statNumber}>{weeklyAttendanceRate}%</Text>
+                <Text style={styles.statLabel}>Weekly Meetings</Text>
+                <Text style={styles.statDetail}>
+                  {explorer.weeklyMeetingAttendance || 0}/{explorer.totalWeeklyMeetings || 0}
+                </Text>
+              </View>
+              
+              <View style={styles.statCard}>
+                <IconSymbol name="shield.fill" size={24} color="#A23B72" />
+                <Text style={styles.statNumber}>{detailAttendanceRate}%</Text>
+                <Text style={styles.statLabel}>Detail Events</Text>
+                <Text style={styles.statDetail}>
+                  {explorer.detailEventAttendance || 0}/{explorer.totalDetailEvents || 0}
+                </Text>
+              </View>
+              
+              <View style={styles.statCard}>
+                <IconSymbol name="heart.fill" size={24} color="#F18F01" />
+                <Text style={styles.statNumber}>{explorer.communityServiceHours || 0}</Text>
+                <Text style={styles.statLabel}>Community Service</Text>
+                <Text style={styles.statDetail}>Hours Completed</Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Certifications */}
+          {explorer.certifications && explorer.certifications.length > 0 && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Certifications</Text>
+              <View style={styles.badgeGrid}>
+                {explorer.certifications.map((cert, index) => (
+                  <View key={index} style={styles.certificationBadge}>
+                    <IconSymbol name="checkmark.seal.fill" size={16} color="#28a745" />
+                    <Text style={styles.badgeText}>{cert}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          )}
+
+          {/* Achievements */}
+          {explorer.achievements && explorer.achievements.length > 0 && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Achievements</Text>
+              <View style={styles.achievementsList}>
+                {explorer.achievements.map((achievement, index) => (
+                  <View key={index} style={styles.achievementItem}>
+                    <IconSymbol name="trophy.fill" size={20} color="#FFD700" />
+                    <Text style={styles.achievementText}>{achievement}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          )}
 
           {/* Contact Information */}
           <View style={styles.section}>
@@ -291,14 +363,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   profileHeader: {
-    backgroundColor: colors.card,
     alignItems: 'center',
     padding: 24,
     marginBottom: 20,
     position: 'relative',
   },
   specialProfileHeader: {
-    backgroundColor: '#FFFEF7',
     borderWidth: 2,
     borderColor: '#FFD700',
   },
@@ -325,7 +395,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 24,
     fontWeight: '700',
-    color: colors.text,
+    color: '#FFFFFF',
     marginBottom: 8,
     textAlign: 'center',
   },
@@ -378,6 +448,70 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: colors.text,
     marginBottom: 16,
+  },
+  statsGrid: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  statCard: {
+    flex: 1,
+    backgroundColor: colors.cardLight,
+    borderRadius: 8,
+    padding: 12,
+    alignItems: 'center',
+  },
+  statNumber: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: colors.background,
+    marginTop: 8,
+  },
+  statLabel: {
+    fontSize: 12,
+    color: colors.secondary,
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  statDetail: {
+    fontSize: 10,
+    color: colors.secondary,
+    marginTop: 2,
+  },
+  badgeGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  certificationBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.cardLight,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 16,
+    gap: 6,
+  },
+  badgeText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: colors.background,
+  },
+  achievementsList: {
+    gap: 12,
+  },
+  achievementItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.cardLight,
+    padding: 12,
+    borderRadius: 8,
+    gap: 12,
+  },
+  achievementText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: colors.background,
+    flex: 1,
   },
   contactItem: {
     flexDirection: 'row',

@@ -16,9 +16,15 @@ export interface Explorer {
   meetingsAttended?: number;
   totalMeetings?: number;
   certifications?: string[];
+  achievements?: string[];
   canEditCalendar?: boolean;
   canEditRoster?: boolean;
   isAdvisor?: boolean;
+  // New attendance tracking fields
+  weeklyMeetingAttendance?: number;
+  detailEventAttendance?: number;
+  totalWeeklyMeetings?: number;
+  totalDetailEvents?: number;
 }
 
 // Helper function to check if rank is special
@@ -38,6 +44,17 @@ export const isAdvisor = (rank: string): boolean => {
   return rank.toLowerCase().includes('advisor');
 };
 
+// Helper function to get roster card color based on rank
+export const getRosterCardColor = (explorer: Explorer): string => {
+  if (isAdvisor(explorer.rank)) {
+    return '#FF4444'; // Red for Advisors
+  } else if (isSpecialRank(explorer.rank)) {
+    return '#FF8C00'; // Orange for Explorers with rank
+  } else {
+    return '#87CEEB'; // Light blue for regular Explorers
+  }
+};
+
 export const roster: Explorer[] = [
   {
     id: '1',
@@ -54,7 +71,12 @@ export const roster: Explorer[] = [
     detailsAttended: 18,
     meetingsAttended: 22,
     totalMeetings: 24,
+    weeklyMeetingAttendance: 22,
+    detailEventAttendance: 18,
+    totalWeeklyMeetings: 24,
+    totalDetailEvents: 20,
     certifications: ['First Aid', 'CPR', 'Traffic Control', 'Leadership'],
+    achievements: ['Outstanding Leadership Award 2023', 'Community Service Excellence', 'Perfect Attendance Q4 2023'],
     canEditCalendar: true,
     canEditRoster: true,
     isAdvisor: false,
@@ -74,7 +96,12 @@ export const roster: Explorer[] = [
     detailsAttended: 15,
     meetingsAttended: 20,
     totalMeetings: 22,
+    weeklyMeetingAttendance: 20,
+    detailEventAttendance: 15,
+    totalWeeklyMeetings: 22,
+    totalDetailEvents: 18,
     certifications: ['First Aid', 'CPR', 'Traffic Control'],
+    achievements: ['Rookie of the Year 2021', 'Traffic Safety Champion'],
     canEditCalendar: true,
     canEditRoster: true,
     isAdvisor: false,
@@ -94,7 +121,12 @@ export const roster: Explorer[] = [
     detailsAttended: 25,
     meetingsAttended: 28,
     totalMeetings: 30,
+    weeklyMeetingAttendance: 28,
+    detailEventAttendance: 25,
+    totalWeeklyMeetings: 30,
+    totalDetailEvents: 28,
     certifications: ['First Aid', 'CPR', 'Traffic Control', 'Leadership', 'Emergency Response'],
+    achievements: ['Explorer of the Year 2022', 'Leadership Excellence', 'Community Impact Award', 'Mentor Recognition'],
     canEditCalendar: true,
     canEditRoster: true,
     isAdvisor: false,
@@ -114,7 +146,12 @@ export const roster: Explorer[] = [
     detailsAttended: 35,
     meetingsAttended: 35,
     totalMeetings: 35,
+    weeklyMeetingAttendance: 35,
+    detailEventAttendance: 35,
+    totalWeeklyMeetings: 35,
+    totalDetailEvents: 35,
     certifications: ['All Certifications', 'Police Academy Graduate'],
+    achievements: ['Advisor Excellence Award', 'Program Development Recognition', '5 Years of Service'],
     canEditCalendar: true,
     canEditRoster: true,
     isAdvisor: true,
@@ -134,7 +171,12 @@ export const roster: Explorer[] = [
     detailsAttended: 12,
     meetingsAttended: 18,
     totalMeetings: 20,
+    weeklyMeetingAttendance: 18,
+    detailEventAttendance: 12,
+    totalWeeklyMeetings: 20,
+    totalDetailEvents: 15,
     certifications: ['First Aid', 'CPR', 'Traffic Control'],
+    achievements: ['Rising Star Award 2022', 'Team Player Recognition'],
     canEditCalendar: true,
     canEditRoster: true,
     isAdvisor: false,
@@ -154,7 +196,12 @@ export const roster: Explorer[] = [
     detailsAttended: 42,
     meetingsAttended: 40,
     totalMeetings: 40,
+    weeklyMeetingAttendance: 40,
+    detailEventAttendance: 42,
+    totalWeeklyMeetings: 40,
+    totalDetailEvents: 42,
     certifications: ['All Certifications', 'Police Academy Graduate', 'Instructor'],
+    achievements: ['Senior Advisor Recognition', 'Training Excellence', 'Program Leadership Award', '7 Years of Service'],
     canEditCalendar: true,
     canEditRoster: true,
     isAdvisor: true,
@@ -174,7 +221,12 @@ export const roster: Explorer[] = [
     detailsAttended: 8,
     meetingsAttended: 14,
     totalMeetings: 16,
+    weeklyMeetingAttendance: 14,
+    detailEventAttendance: 8,
+    totalWeeklyMeetings: 16,
+    totalDetailEvents: 10,
     certifications: ['First Aid', 'CPR'],
+    achievements: ['New Member Excellence', 'Dedication Award'],
     canEditCalendar: false,
     canEditRoster: false,
     isAdvisor: false,
@@ -194,7 +246,12 @@ export const roster: Explorer[] = [
     detailsAttended: 2,
     meetingsAttended: 8,
     totalMeetings: 12,
+    weeklyMeetingAttendance: 8,
+    detailEventAttendance: 2,
+    totalWeeklyMeetings: 12,
+    totalDetailEvents: 4,
     certifications: ['First Aid'],
+    achievements: ['Probationary Progress'],
     canEditCalendar: false,
     canEditRoster: false,
     isAdvisor: false,
@@ -214,7 +271,12 @@ export const roster: Explorer[] = [
     detailsAttended: 4,
     meetingsAttended: 10,
     totalMeetings: 12,
+    weeklyMeetingAttendance: 10,
+    detailEventAttendance: 4,
+    totalWeeklyMeetings: 12,
+    totalDetailEvents: 6,
     certifications: ['First Aid'],
+    achievements: ['Volunteer Spirit Award'],
     canEditCalendar: false,
     canEditRoster: false,
     isAdvisor: false,
@@ -234,7 +296,12 @@ export const roster: Explorer[] = [
     detailsAttended: 6,
     meetingsAttended: 12,
     totalMeetings: 14,
+    weeklyMeetingAttendance: 12,
+    detailEventAttendance: 6,
+    totalWeeklyMeetings: 14,
+    totalDetailEvents: 8,
     certifications: ['First Aid', 'CPR'],
+    achievements: ['Consistent Attendance Award', 'Community Service Recognition'],
     canEditCalendar: false,
     canEditRoster: false,
     isAdvisor: false,
