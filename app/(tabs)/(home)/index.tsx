@@ -240,16 +240,22 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   logoContainer: {
+    width: 140,
+    height: 140,
     marginBottom: 24,
     alignItems: 'center',
-  },
-  logoImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+    justifyContent: 'center',
     backgroundColor: colors.cardLight,
+    borderRadius: 70,
     boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.2)',
     elevation: 6,
+    padding: 10,
+  },
+  logoImage: {
+    width: '100%',
+    height: '100%',
+    maxWidth: 120,
+    maxHeight: 120,
   },
   welcomeTitle: {
     fontSize: 28,
