@@ -2,13 +2,13 @@
 import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
 
 export const colors = {
-  background: '#1e3a8a',       // Deep Blue Background
+  background: '#ADD8E6',       // Light Blue Background
   text: '#000000',             // Black text
-  textSecondary: '#374151',    // Dark gray for secondary text
+  textSecondary: '#333333',    // Dark gray for secondary text
   primary: '#3b82f6',          // Bright Blue
   secondary: '#6c757d',        // Gray
   accent: '#fbbf24',           // Golden Yellow
-  card: '#1e40af',             // Slightly lighter blue for cards
+  card: '#ffffff',             // White cards for better contrast on light blue
   highlight: '#2563eb',        // Blue highlight
   cardLight: '#ffffff',        // White cards for better contrast
 };
