@@ -8,9 +8,16 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import EventCard from "@/components/EventCard";
 import { events } from "@/data/events";
 import { useRouter } from "expo-router";
+import { currentUser } from "@/data/auth";
+import { roster } from "@/data/roster";
 
 export default function HomeScreen() {
   const router = useRouter();
+  
+  // Get current user's rank to determine access
+  const currentExplorer = currentUser.explorerId ? roster.find(e => e.id === currentUser.explorerId) : null;
+  const userRank = currentExplorer?.rank || '';
+  const canViewApplications = userRank.toLowerCase().includes('advisor') || userRank.toLowerCase().includes('major');
   
   // Get upcoming events (next 3)
   const upcomingEvents = events
@@ -94,13 +101,15 @@ export default function HomeScreen() {
                 <Text style={styles.quickActionText}>Meetings</Text>
               </Pressable>
               
-              <Pressable 
-                style={[styles.quickActionCard, { backgroundColor: '#6f42c1' }]}
-                onPress={() => router.push('/applications')}
-              >
-                <IconSymbol name="doc.text.fill" size={24} color={colors.text} />
-                <Text style={styles.quickActionText}>Applications</Text>
-              </Pressable>
+              {canViewApplications && (
+                <Pressable 
+                  style={[styles.quickActionCard, { backgroundColor: '#6f42c1' }]}
+                  onPress={() => router.push('/(tabs)/applications')}
+                >
+                  <IconSymbol name="doc.text.fill" size={24} color={colors.text} />
+                  <Text style={styles.quickActionText}>Applications</Text>
+                </Pressable>
+              )}
               
               <Pressable 
                 style={[styles.quickActionCard, { backgroundColor: colors.accent }]}
@@ -111,6 +120,14 @@ export default function HomeScreen() {
               >
                 <IconSymbol name="folder.fill" size={24} color={colors.background} />
                 <Text style={[styles.quickActionText, { color: colors.background }]}>Google Drive</Text>
+              </Pressable>
+              
+              <Pressable 
+                style={[styles.quickActionCard, { backgroundColor: '#e91e63' }]}
+                onPress={() => router.push('/(tabs)/photos')}
+              >
+                <IconSymbol name="photo.stack" size={24} color={colors.text} />
+                <Text style={styles.quickActionText}>Photos</Text>
               </Pressable>
               
               <Pressable 
@@ -287,8 +304,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   quickActionCard: {
-    width: '48%',
-    aspectRatio: 1.2,
+    width: '31%',
+    aspectRatio: 1,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
@@ -297,10 +314,11 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   quickActionText: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '600',
     color: colors.text,
-    marginTop: 8,
+    marginTop: 6,
+    textAlign: 'center',
   },
   eventsSection: {
     marginBottom: 32,

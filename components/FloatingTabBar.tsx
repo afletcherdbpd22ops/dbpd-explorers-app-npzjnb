@@ -40,7 +40,7 @@ interface FloatingTabBarProps {
 
 export default function FloatingTabBar({
   tabs,
-  containerWidth = Math.min(screenWidth - 40, tabs.length * 70), // Dynamic width based on tab count
+  containerWidth = Math.min(screenWidth - 40, Math.max(tabs.length * 60, 300)), // Dynamic width based on tab count with minimum
   borderRadius = 25,
   bottomMargin
 }: FloatingTabBarProps) {

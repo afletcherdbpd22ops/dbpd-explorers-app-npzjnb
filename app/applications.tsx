@@ -1,47 +1,24 @@
 
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable, Alert, TextInput } from 'react-native';
-import { Stack, useRouter } from 'expo-router';
+import { Stack, useRouter, Redirect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, commonStyles } from '@/styles/commonStyles';
 import { IconSymbol } from '@/components/IconSymbol';
 import { memberApplications, NewMemberApplication } from '@/data/applications';
 import { currentUser } from '@/data/auth';
+import { roster } from '@/data/roster';
 
 export default function ApplicationsScreen() {
   const router = useRouter();
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'pending' | 'approved' | 'rejected' | 'interview_scheduled'>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Check if user has permission to view applications
-  if (!currentUser.permissions.canViewApplications) {
-    return (
-      <>
-        <Stack.Screen
-          options={{
-            title: "Applications",
-            headerStyle: {
-              backgroundColor: colors.background,
-            },
-            headerTintColor: colors.text,
-          }}
-        />
-        <SafeAreaView style={[commonStyles.wrapper]} edges={['bottom']}>
-          <View style={styles.noPermissionContainer}>
-            <IconSymbol name="lock.fill" size={60} color={colors.textSecondary} />
-            <Text style={styles.noPermissionTitle}>Access Restricted</Text>
-            <Text style={styles.noPermissionText}>
-              You do not have permission to view member applications. 
-              Only Majors, Captains, and Advisors can access this section.
-            </Text>
-            <Pressable style={styles.backButton} onPress={() => router.back()}>
-              <Text style={styles.backButtonText}>Go Back</Text>
-            </Pressable>
-          </View>
-        </SafeAreaView>
-      </>
-    );
-  }
+  // Get current user's rank for permission checks within the screen
+  const currentExplorer = currentUser.explorerId ? roster.find(e => e.id === currentUser.explorerId) : null;
+  const userRank = currentExplorer?.rank || '';
+  const canApproveApplications = userRank.toLowerCase().includes('advisor') || userRank.toLowerCase().includes('major');
+
 
   // Filter applications
   const filteredApplications = memberApplications.filter(app => {
@@ -83,7 +60,7 @@ export default function ApplicationsScreen() {
   };
 
   const handleApproveApplication = (applicationId: string) => {
-    if (currentUser.permissions.canApproveApplications) {
+    if (canApproveApplications) {
       Alert.alert(
         'Approve Application',
         'Are you sure you want to approve this application?',
@@ -101,7 +78,7 @@ export default function ApplicationsScreen() {
   };
 
   const handleRejectApplication = (applicationId: string) => {
-    if (currentUser.permissions.canApproveApplications) {
+    if (canApproveApplications) {
       Alert.alert(
         'Reject Application',
         'Are you sure you want to reject this application?',
@@ -127,22 +104,21 @@ export default function ApplicationsScreen() {
   ] as const;
 
   return (
-    <>
-      <Stack.Screen
-        options={{
-          title: "Member Applications",
-          headerStyle: {
-            backgroundColor: colors.background,
-          },
-          headerTintColor: colors.text,
-        }}
-      />
-      <SafeAreaView style={[commonStyles.wrapper]} edges={['bottom']}>
-        <ScrollView 
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}
-          showsVerticalScrollIndicator={false}
-        >
+    <SafeAreaView style={styles.container}>
+      <Stack.Screen options={{ headerShown: false }} />
+      
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Applications</Text>
+        <Pressable onPress={() => router.push('/new-application')}>
+          <IconSymbol name="plus" size={24} color={colors.text} />
+        </Pressable>
+      </View>
+
+      <ScrollView 
+        style={styles.scrollContainer}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
           {/* Stats Overview */}
           <View style={styles.statsContainer}>
             <View style={styles.statCard}>
@@ -259,7 +235,7 @@ export default function ApplicationsScreen() {
                   </Pressable>
 
                   {/* Quick Actions for pending applications */}
-                  {application.status === 'pending' && currentUser.permissions.canApproveApplications && (
+                  {application.status === 'pending' && canApproveApplications && (
                     <View style={styles.quickActions}>
                       <Pressable
                         style={[styles.actionButton, styles.approveButton]}
@@ -332,8 +308,7 @@ export default function ApplicationsScreen() {
             )}
           </View>
         </ScrollView>
-      </SafeAreaView>
-    </>
+    </SafeAreaView>
   );
 }
 
@@ -342,39 +317,25 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  contentContainer: {
-    paddingBottom: 40,
-  },
-  noPermissionContainer: {
-    flex: 1,
-    justifyContent: 'center',
+  header: {
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 32,
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
   },
-  noPermissionTitle: {
+  headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     color: colors.text,
-    marginTop: 16,
-    marginBottom: 8,
   },
-  noPermissionText: {
-    fontSize: 16,
-    color: colors.textSecondary,
-    textAlign: 'center',
-    lineHeight: 24,
-    marginBottom: 24,
+  scrollContainer: {
+    flex: 1,
   },
-  backButton: {
-    backgroundColor: colors.primary,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 8,
-  },
-  backButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.text,
+  contentContainer: {
+    paddingBottom: 100, // Extra padding for floating tab bar
   },
   statsContainer: {
     flexDirection: 'row',

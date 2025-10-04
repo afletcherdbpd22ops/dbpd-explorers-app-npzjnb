@@ -15,9 +15,9 @@ export interface User {
 
 // Mock current user - in a real app this would come from authentication
 export const currentUser: User = {
-  id: 'user1',
-  email: 'sarah.johnson@daytonabeachpd.gov',
-  explorerId: '1', // Sarah Johnson - Captain
+  id: 'user3',
+  email: 'emily.rodriguez@daytonabeachpd.gov',
+  explorerId: '3', // Emily Rodriguez - Explorer Major
   role: 'explorer',
   permissions: {
     canEditCalendar: true,
