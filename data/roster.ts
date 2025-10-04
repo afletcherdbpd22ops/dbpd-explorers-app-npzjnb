@@ -46,13 +46,8 @@ export const isAdvisor = (rank: string): boolean => {
 
 // Helper function to get roster card color based on rank
 export const getRosterCardColor = (explorer: Explorer): string => {
-  if (isAdvisor(explorer.rank)) {
-    return '#FF4444'; // Red for Advisors
-  } else if (isSpecialRank(explorer.rank)) {
-    return '#FF8C00'; // Orange for Explorers with rank
-  } else {
-    return '#87CEEB'; // Light blue for regular Explorers
-  }
+  // Return standard card color for all explorers (no background coloring)
+  return '#1e40af'; // colors.card from commonStyles.ts
 };
 
 export const roster: Explorer[] = [
