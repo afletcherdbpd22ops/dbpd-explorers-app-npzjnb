@@ -22,6 +22,8 @@ export interface NewMemberApplication {
   hasTransportation: boolean;
   parentConsent: boolean;
   backgroundCheck: boolean;
+  hasCharges: boolean;
+  chargeDetails?: string;
   status: 'pending' | 'approved' | 'rejected' | 'interview_scheduled';
   submittedDate: string;
   reviewedBy?: string;
@@ -53,6 +55,7 @@ export const memberApplications: NewMemberApplication[] = [
     hasTransportation: true,
     parentConsent: true,
     backgroundCheck: true,
+    hasCharges: false,
     status: 'pending',
     submittedDate: '2024-02-10',
   },
@@ -79,6 +82,7 @@ export const memberApplications: NewMemberApplication[] = [
     hasTransportation: false,
     parentConsent: true,
     backgroundCheck: true,
+    hasCharges: false,
     status: 'interview_scheduled',
     submittedDate: '2024-02-05',
     reviewedBy: 'Officer David Martinez',
@@ -108,10 +112,40 @@ export const memberApplications: NewMemberApplication[] = [
     hasTransportation: true,
     parentConsent: true,
     backgroundCheck: true,
+    hasCharges: false,
     status: 'approved',
     submittedDate: '2024-01-28',
     reviewedBy: 'Officer James Wilson',
     reviewedDate: '2024-02-01',
     notes: 'Strong candidate with military background. Approved for next orientation.',
+  },
+  {
+    id: '4',
+    firstName: 'Tyler',
+    lastName: 'Johnson',
+    email: 'tyler.johnson@email.com',
+    phone: '(386) 555-0206',
+    dateOfBirth: '2006-09-12',
+    address: '321 Nova Rd',
+    city: 'Daytona Beach',
+    state: 'FL',
+    zipCode: '32117',
+    emergencyContactName: 'Robert Johnson',
+    emergencyContactPhone: '(386) 555-0207',
+    emergencyContactRelation: 'Father',
+    schoolName: 'Atlantic High School',
+    gradeLevel: '11th',
+    gpa: '3.2',
+    whyJoin: 'I want to make a positive difference in my community and learn about law enforcement. I believe this program will help me grow as a person and develop important life skills.',
+    priorExperience: 'Volunteer at local youth center, member of school soccer team',
+    availableHours: ['Weekday Evenings', 'Weekends'],
+    hasTransportation: true,
+    parentConsent: true,
+    backgroundCheck: true,
+    hasCharges: true,
+    chargeDetails: 'I was charged with a misdemeanor for underage possession of alcohol at a party in 2023. I completed community service and attended alcohol education classes. The charge was dismissed upon completion of the program. I learned from this mistake and have not had any issues since.',
+    status: 'pending',
+    submittedDate: '2024-02-12',
+    notes: 'Application under review due to disclosed charge. Awaiting advisor decision.',
   },
 ];

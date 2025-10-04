@@ -31,6 +31,8 @@ export default function NewApplicationScreen() {
     hasTransportation: false,
     parentConsent: false,
     backgroundCheck: false,
+    hasCharges: false,
+    chargeDetails: '',
   });
 
   const [availableHours, setAvailableHours] = useState({
@@ -60,6 +62,11 @@ export default function NewApplicationScreen() {
         Alert.alert('Missing Information', `Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}.`);
         return false;
       }
+    }
+
+    if (formData.hasCharges && !formData.chargeDetails.trim()) {
+      Alert.alert('Missing Information', 'Please provide details about the charges you mentioned.');
+      return false;
     }
 
     if (!formData.parentConsent) {
@@ -340,6 +347,66 @@ export default function NewApplicationScreen() {
             </View>
           </View>
 
+          {/* Background Check Questions */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Background Information</Text>
+            <Text style={styles.sectionSubtitle}>
+              Please answer the following questions honestly. This information is required for all applicants.
+            </Text>
+            
+            <View style={styles.backgroundQuestionContainer}>
+              <Text style={styles.backgroundQuestionText}>
+                Have you ever been charged with a misdemeanor or felony?
+              </Text>
+              
+              <View style={styles.radioContainer}>
+                <Pressable
+                  style={styles.radioRow}
+                  onPress={() => updateFormData('hasCharges', false)}
+                >
+                  <View style={[styles.radioButton, !formData.hasCharges && styles.radioButtonSelected]}>
+                    {!formData.hasCharges && (
+                      <View style={styles.radioButtonInner} />
+                    )}
+                  </View>
+                  <Text style={styles.radioLabel}>No</Text>
+                </Pressable>
+
+                <Pressable
+                  style={styles.radioRow}
+                  onPress={() => updateFormData('hasCharges', true)}
+                >
+                  <View style={[styles.radioButton, formData.hasCharges && styles.radioButtonSelected]}>
+                    {formData.hasCharges && (
+                      <View style={styles.radioButtonInner} />
+                    )}
+                  </View>
+                  <Text style={styles.radioLabel}>Yes</Text>
+                </Pressable>
+              </View>
+
+              {formData.hasCharges && (
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Please provide details about the charge(s) *</Text>
+                  <TextInput
+                    style={[styles.input, styles.textArea]}
+                    value={formData.chargeDetails}
+                    onChangeText={(value) => updateFormData('chargeDetails', value)}
+                    placeholder="Please describe the nature of the charge(s), when they occurred, and the outcome..."
+                    placeholderTextColor={colors.textSecondary}
+                    multiline
+                    numberOfLines={4}
+                    textAlignVertical="top"
+                  />
+                  <Text style={styles.helperText}>
+                    Note: Having charges does not automatically disqualify you from the program. 
+                    Each case is reviewed individually by our advisors.
+                  </Text>
+                </View>
+              )}
+            </View>
+          </View>
+
           {/* Application Questions */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Application Questions</Text>
@@ -536,6 +603,56 @@ const styles = StyleSheet.create({
   textArea: {
     height: 100,
     paddingTop: 12,
+  },
+  backgroundQuestionContainer: {
+    backgroundColor: colors.cardLight,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+  },
+  backgroundQuestionText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: colors.background,
+    marginBottom: 16,
+  },
+  radioContainer: {
+    flexDirection: 'row',
+    gap: 24,
+    marginBottom: 16,
+  },
+  radioRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  radioButton: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: colors.secondary,
+    marginRight: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  radioButtonSelected: {
+    borderColor: colors.primary,
+  },
+  radioButtonInner: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: colors.primary,
+  },
+  radioLabel: {
+    fontSize: 16,
+    color: colors.background,
+  },
+  helperText: {
+    fontSize: 12,
+    color: colors.secondary,
+    marginTop: 8,
+    fontStyle: 'italic',
   },
   checkboxContainer: {
     gap: 12,

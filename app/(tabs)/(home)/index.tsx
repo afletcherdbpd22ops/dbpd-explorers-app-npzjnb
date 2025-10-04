@@ -54,7 +54,7 @@ export default function HomeScreen() {
             <View style={styles.logoContainer}>
               {/* Daytona Beach Police Explorer Logo */}
               <Image 
-                source={require('@/assets/images/1c8ade93-d472-40b0-99cf-390ab8676c2a.png')}
+                source={require('@/assets/images/6daf5d32-cb09-486d-b2af-d9a86b417b59.png')}
                 style={styles.logoImage}
                 resizeMode="contain"
               />

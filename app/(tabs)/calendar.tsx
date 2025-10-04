@@ -12,6 +12,7 @@ import { events, Event } from '@/data/events';
 export default function CalendarScreen() {
   const router = useRouter();
   const [selectedDate, setSelectedDate] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState<string>('all');
   
   // Create marked dates object for calendar
   const markedDates = events.reduce((acc, event) => {
@@ -37,11 +38,17 @@ export default function CalendarScreen() {
     ? events.filter(event => event.date === selectedDate)
     : [];
 
+  // Filter events based on selected filter
+  const filterEvents = (eventList: Event[]) => {
+    if (selectedFilter === 'all') return eventList;
+    return eventList.filter(event => event.type === selectedFilter);
+  };
+
   // Get all upcoming events if no date selected
   const displayEvents = selectedDate 
-    ? selectedDateEvents 
-    : events.filter(event => new Date(event.date) >= new Date())
-             .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    ? filterEvents(selectedDateEvents)
+    : filterEvents(events.filter(event => new Date(event.date) >= new Date())
+                          .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()));
 
   const handleEventPress = (eventId: string) => {
     router.push(`/event-details?id=${eventId}`);
@@ -49,6 +56,37 @@ export default function CalendarScreen() {
 
   const handleDatePress = (day: any) => {
     setSelectedDate(day.dateString);
+  };
+
+  const getEventTypeIcon = (type: Event['type']) => {
+    switch (type) {
+      case 'training': return 'graduationcap.fill';
+      case 'meeting': return 'person.3.fill';
+      case 'community': return 'heart.fill';
+      case 'ceremony': return 'star.fill';
+      default: return 'calendar';
+    }
+  };
+
+  const getEventTypeColor = (type: Event['type']) => {
+    switch (type) {
+      case 'training': return colors.primary;
+      case 'meeting': return colors.card;
+      case 'community': return colors.accent;
+      case 'ceremony': return '#dc3545';
+      default: return colors.textSecondary;
+    }
+  };
+
+  const getEventTypeCount = (type: string) => {
+    if (type === 'all') return events.length;
+    return events.filter(e => e.type === type).length;
+  };
+
+  const getUpcomingEventTypeCount = (type: string) => {
+    const upcomingEvents = events.filter(event => new Date(event.date) >= new Date());
+    if (type === 'all') return upcomingEvents.length;
+    return upcomingEvents.filter(e => e.type === type).length;
   };
 
   return (
@@ -107,13 +145,106 @@ export default function CalendarScreen() {
             </View>
           </View>
 
+          {/* Event Type Filters */}
+          <View style={styles.filterSection}>
+            <Text style={styles.sectionTitle}>Filter Events</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterScrollView}>
+              <Pressable
+                style={[
+                  styles.filterChip,
+                  selectedFilter === 'all' && styles.filterChipActive,
+                  { backgroundColor: selectedFilter === 'all' ? colors.primary : colors.cardLight }
+                ]}
+                onPress={() => setSelectedFilter('all')}
+              >
+                <IconSymbol name="calendar" size={16} color={selectedFilter === 'all' ? colors.text : colors.background} />
+                <Text style={[
+                  styles.filterChipText,
+                  { color: selectedFilter === 'all' ? colors.text : colors.background }
+                ]}>
+                  All ({getUpcomingEventTypeCount('all')})
+                </Text>
+              </Pressable>
+
+              <Pressable
+                style={[
+                  styles.filterChip,
+                  selectedFilter === 'training' && styles.filterChipActive,
+                  { backgroundColor: selectedFilter === 'training' ? colors.primary : colors.cardLight }
+                ]}
+                onPress={() => setSelectedFilter('training')}
+              >
+                <IconSymbol name="graduationcap.fill" size={16} color={selectedFilter === 'training' ? colors.text : colors.background} />
+                <Text style={[
+                  styles.filterChipText,
+                  { color: selectedFilter === 'training' ? colors.text : colors.background }
+                ]}>
+                  Training ({getUpcomingEventTypeCount('training')})
+                </Text>
+              </Pressable>
+
+              <Pressable
+                style={[
+                  styles.filterChip,
+                  selectedFilter === 'meeting' && styles.filterChipActive,
+                  { backgroundColor: selectedFilter === 'meeting' ? colors.primary : colors.cardLight }
+                ]}
+                onPress={() => setSelectedFilter('meeting')}
+              >
+                <IconSymbol name="person.3.fill" size={16} color={selectedFilter === 'meeting' ? colors.text : colors.background} />
+                <Text style={[
+                  styles.filterChipText,
+                  { color: selectedFilter === 'meeting' ? colors.text : colors.background }
+                ]}>
+                  Meetings ({getUpcomingEventTypeCount('meeting')})
+                </Text>
+              </Pressable>
+
+              <Pressable
+                style={[
+                  styles.filterChip,
+                  selectedFilter === 'community' && styles.filterChipActive,
+                  { backgroundColor: selectedFilter === 'community' ? colors.primary : colors.cardLight }
+                ]}
+                onPress={() => setSelectedFilter('community')}
+              >
+                <IconSymbol name="heart.fill" size={16} color={selectedFilter === 'community' ? colors.text : colors.background} />
+                <Text style={[
+                  styles.filterChipText,
+                  { color: selectedFilter === 'community' ? colors.text : colors.background }
+                ]}>
+                  Community ({getUpcomingEventTypeCount('community')})
+                </Text>
+              </Pressable>
+
+              <Pressable
+                style={[
+                  styles.filterChip,
+                  selectedFilter === 'ceremony' && styles.filterChipActive,
+                  { backgroundColor: selectedFilter === 'ceremony' ? colors.primary : colors.cardLight }
+                ]}
+                onPress={() => setSelectedFilter('ceremony')}
+              >
+                <IconSymbol name="star.fill" size={16} color={selectedFilter === 'ceremony' ? colors.text : colors.background} />
+                <Text style={[
+                  styles.filterChipText,
+                  { color: selectedFilter === 'ceremony' ? colors.text : colors.background }
+                ]}>
+                  Ceremonies ({getUpcomingEventTypeCount('ceremony')})
+                </Text>
+              </Pressable>
+            </ScrollView>
+          </View>
+
           {/* Events List */}
           <View style={styles.eventsSection}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>
                 {selectedDate 
                   ? `Events on ${selectedDate}` 
-                  : 'Upcoming Events'
+                  : selectedFilter === 'all' 
+                    ? 'Upcoming Events'
+                    : `Upcoming ${selectedFilter.charAt(0).toUpperCase() + selectedFilter.slice(1)} Events`
                 }
               </Text>
               {selectedDate && (
@@ -125,56 +256,121 @@ export default function CalendarScreen() {
 
             {displayEvents.length > 0 ? (
               displayEvents.map((event) => (
-                <EventCard
-                  key={event.id}
-                  event={event}
-                  onPress={() => handleEventPress(event.id)}
-                />
+                <View key={event.id} style={styles.eventContainer}>
+                  <EventCard
+                    event={event}
+                    onPress={() => handleEventPress(event.id)}
+                  />
+                  
+                  {/* Enhanced Event Details Preview */}
+                  <View style={styles.eventDetailsPreview}>
+                    <View style={styles.eventMetaRow}>
+                      <View style={styles.eventMetaItem}>
+                        <IconSymbol name="clock" size={14} color={colors.textSecondary} />
+                        <Text style={styles.eventMetaText}>
+                          {event.time}{event.endTime ? ` - ${event.endTime}` : ''}
+                        </Text>
+                      </View>
+                      
+                      {event.maxParticipants && (
+                        <View style={styles.eventMetaItem}>
+                          <IconSymbol name="person.2" size={14} color={colors.textSecondary} />
+                          <Text style={styles.eventMetaText}>
+                            {event.currentParticipants || 0}/{event.maxParticipants}
+                          </Text>
+                        </View>
+                      )}
+                      
+                      {event.isRequired && (
+                        <View style={styles.requiredBadge}>
+                          <Text style={styles.requiredBadgeText}>Required</Text>
+                        </View>
+                      )}
+                    </View>
+
+                    {event.instructor && (
+                      <View style={styles.eventMetaRow}>
+                        <View style={styles.eventMetaItem}>
+                          <IconSymbol name="person.circle" size={14} color={colors.textSecondary} />
+                          <Text style={styles.eventMetaText}>Instructor: {event.instructor}</Text>
+                        </View>
+                      </View>
+                    )}
+
+                    {event.certificationOffered && (
+                      <View style={styles.certificationBadge}>
+                        <IconSymbol name="rosette" size={14} color={colors.accent} />
+                        <Text style={styles.certificationText}>{event.certificationOffered}</Text>
+                      </View>
+                    )}
+
+                    {event.communityServiceHours && (
+                      <View style={styles.serviceHoursBadge}>
+                        <IconSymbol name="heart.fill" size={14} color="#10b981" />
+                        <Text style={styles.serviceHoursText}>
+                          {event.communityServiceHours} Service Hours
+                        </Text>
+                      </View>
+                    )}
+
+                    {event.rsvpRequired && event.rsvpDeadline && (
+                      <View style={styles.rsvpNotice}>
+                        <IconSymbol name="exclamationmark.triangle" size={14} color="#f59e0b" />
+                        <Text style={styles.rsvpText}>
+                          RSVP Required by {event.rsvpDeadline}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                </View>
               ))
             ) : (
               <View style={styles.noEventsContainer}>
                 <IconSymbol name="calendar.badge.exclamationmark" size={40} color={colors.textSecondary} />
                 <Text style={styles.noEventsText}>
-                  {selectedDate ? 'No events on this date' : 'No upcoming events'}
+                  {selectedDate 
+                    ? 'No events on this date' 
+                    : selectedFilter === 'all'
+                      ? 'No upcoming events'
+                      : `No upcoming ${selectedFilter} events`
+                  }
                 </Text>
               </View>
             )}
           </View>
 
-          {/* Event Types Filter */}
-          <View style={styles.filterSection}>
-            <Text style={styles.sectionTitle}>Event Types</Text>
-            <View style={styles.filterGrid}>
-              <View style={[styles.filterCard, { backgroundColor: colors.primary }]}>
-                <IconSymbol name="graduationcap.fill" size={24} color={colors.text} />
-                <Text style={styles.filterText}>Training</Text>
-                <Text style={styles.filterCount}>
-                  {events.filter(e => e.type === 'training').length}
-                </Text>
+          {/* Event Statistics */}
+          <View style={styles.statsSection}>
+            <Text style={styles.sectionTitle}>Event Statistics</Text>
+            <View style={styles.statsGrid}>
+              <View style={[styles.statCard, { backgroundColor: colors.primary }]}>
+                <IconSymbol name="calendar" size={24} color={colors.text} />
+                <Text style={styles.statNumber}>{events.length}</Text>
+                <Text style={styles.statLabel}>Total Events</Text>
               </View>
               
-              <View style={[styles.filterCard, { backgroundColor: colors.card }]}>
-                <IconSymbol name="person.3.fill" size={24} color={colors.text} />
-                <Text style={styles.filterText}>Meetings</Text>
-                <Text style={styles.filterCount}>
-                  {events.filter(e => e.type === 'meeting').length}
+              <View style={[styles.statCard, { backgroundColor: '#dc3545' }]}>
+                <IconSymbol name="exclamationmark.circle" size={24} color={colors.text} />
+                <Text style={styles.statNumber}>
+                  {events.filter(e => e.isRequired).length}
                 </Text>
+                <Text style={styles.statLabel}>Required</Text>
               </View>
               
-              <View style={[styles.filterCard, { backgroundColor: colors.accent }]}>
+              <View style={[styles.statCard, { backgroundColor: colors.accent }]}>
                 <IconSymbol name="heart.fill" size={24} color={colors.background} />
-                <Text style={[styles.filterText, { color: colors.background }]}>Community</Text>
-                <Text style={[styles.filterCount, { color: colors.background }]}>
-                  {events.filter(e => e.type === 'community').length}
+                <Text style={[styles.statNumber, { color: colors.background }]}>
+                  {events.filter(e => e.communityServiceHours).reduce((sum, e) => sum + (e.communityServiceHours || 0), 0)}
                 </Text>
+                <Text style={[styles.statLabel, { color: colors.background }]}>Service Hours</Text>
               </View>
               
-              <View style={[styles.filterCard, { backgroundColor: '#dc3545' }]}>
-                <IconSymbol name="star.fill" size={24} color={colors.text} />
-                <Text style={styles.filterText}>Ceremonies</Text>
-                <Text style={styles.filterCount}>
-                  {events.filter(e => e.type === 'ceremony').length}
+              <View style={[styles.statCard, { backgroundColor: '#10b981' }]}>
+                <IconSymbol name="rosette" size={24} color={colors.text} />
+                <Text style={styles.statNumber}>
+                  {events.filter(e => e.certificationOffered).length}
                 </Text>
+                <Text style={styles.statLabel}>Certifications</Text>
               </View>
             </View>
           </View>
@@ -223,6 +419,29 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.textSecondary,
   },
+  filterSection: {
+    marginBottom: 24,
+  },
+  filterScrollView: {
+    paddingHorizontal: 20,
+  },
+  filterChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginRight: 12,
+    gap: 6,
+  },
+  filterChipActive: {
+    boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.15)',
+    elevation: 3,
+  },
+  filterChipText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
   eventsSection: {
     marginBottom: 32,
   },
@@ -243,6 +462,85 @@ const styles = StyleSheet.create({
     color: colors.accent,
     fontWeight: '500',
   },
+  eventContainer: {
+    marginBottom: 16,
+  },
+  eventDetailsPreview: {
+    paddingHorizontal: 20,
+    paddingTop: 8,
+    gap: 8,
+  },
+  eventMetaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: 16,
+  },
+  eventMetaItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  eventMetaText: {
+    fontSize: 12,
+    color: colors.textSecondary,
+  },
+  requiredBadge: {
+    backgroundColor: '#dc3545',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+  },
+  requiredBadgeText: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: colors.text,
+  },
+  certificationBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.cardLight,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    alignSelf: 'flex-start',
+    gap: 4,
+  },
+  certificationText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: colors.accent,
+  },
+  serviceHoursBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#10b981',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    alignSelf: 'flex-start',
+    gap: 4,
+  },
+  serviceHoursText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: colors.text,
+  },
+  rsvpNotice: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fef3c7',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    alignSelf: 'flex-start',
+    gap: 4,
+  },
+  rsvpText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#92400e',
+  },
   noEventsContainer: {
     alignItems: 'center',
     paddingVertical: 40,
@@ -253,16 +551,16 @@ const styles = StyleSheet.create({
     marginTop: 12,
     textAlign: 'center',
   },
-  filterSection: {
+  statsSection: {
     paddingHorizontal: 20,
     marginBottom: 32,
   },
-  filterGrid: {
+  statsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
-  filterCard: {
+  statCard: {
     width: '48%',
     padding: 16,
     borderRadius: 12,
@@ -271,16 +569,17 @@ const styles = StyleSheet.create({
     boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.15)',
     elevation: 3,
   },
-  filterText: {
-    fontSize: 14,
-    fontWeight: '600',
+  statNumber: {
+    fontSize: 24,
+    fontWeight: 'bold',
     color: colors.text,
     marginTop: 8,
     marginBottom: 4,
   },
-  filterCount: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  statLabel: {
+    fontSize: 12,
+    fontWeight: '500',
     color: colors.text,
+    textAlign: 'center',
   },
 });
