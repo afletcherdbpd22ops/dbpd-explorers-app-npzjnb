@@ -73,6 +73,33 @@ export default function HomeScreen() {
             </Text>
           </View>
 
+          {/* Recent Announcements - Moved above navigation */}
+          <View style={styles.announcementsSection}>
+            <Text style={styles.sectionTitle}>Recent Announcements</Text>
+            <View style={commonStyles.card}>
+              <View style={styles.announcementHeader}>
+                <IconSymbol name="megaphone.fill" size={20} color={colors.primary} />
+                <Text style={styles.announcementTitle}>Tab Bar Restored</Text>
+              </View>
+              <Text style={styles.announcementText}>
+                The bottom tab bar has been restored! You can now quickly navigate between Home, Calendar, Roster, Messages, and Profile using the tabs at the bottom of the screen.
+              </Text>
+              <Text style={styles.announcementDate}>Posted today</Text>
+            </View>
+            
+            <View style={commonStyles.card}>
+              <View style={styles.announcementHeader}>
+                <IconSymbol name="calendar.badge.plus" size={20} color={colors.accent} />
+                <Text style={styles.announcementTitle}>Weekly Meeting Tracking</Text>
+              </View>
+              <Text style={styles.announcementText}>
+                Attendance tracking is now digital! Check the Meetings section to view your attendance record 
+                and see upcoming meeting topics and locations.
+              </Text>
+              <Text style={styles.announcementDate}>Posted 2 days ago</Text>
+            </View>
+          </View>
+
           {/* Navigation Menu */}
           <View style={styles.navigationContainer}>
             <Text style={styles.sectionTitle}>Navigation</Text>
@@ -246,34 +273,6 @@ export default function HomeScreen() {
               </Text>
             </View>
           </View>
-
-          {/* Recent Announcements */}
-          <View style={styles.announcementsSection}>
-            <Text style={styles.sectionTitle}>Recent Announcements</Text>
-            <View style={commonStyles.card}>
-              <View style={styles.announcementHeader}>
-                <IconSymbol name="megaphone.fill" size={20} color={colors.primary} />
-                <Text style={styles.announcementTitle}>Full Screen Experience</Text>
-              </View>
-              <Text style={styles.announcementText}>
-                The app now runs in full screen mode! Navigate between sections using the navigation menu above. 
-                All features are still accessible through the main navigation cards.
-              </Text>
-              <Text style={styles.announcementDate}>Posted today</Text>
-            </View>
-            
-            <View style={commonStyles.card}>
-              <View style={styles.announcementHeader}>
-                <IconSymbol name="calendar.badge.plus" size={20} color={colors.accent} />
-                <Text style={styles.announcementTitle}>Weekly Meeting Tracking</Text>
-              </View>
-              <Text style={styles.announcementText}>
-                Attendance tracking is now digital! Check the Meetings section to view your attendance record 
-                and see upcoming meeting topics and locations.
-              </Text>
-              <Text style={styles.announcementDate}>Posted 2 days ago</Text>
-            </View>
-          </View>
         </ScrollView>
       </SafeAreaView>
     </>
@@ -286,7 +285,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   contentContainer: {
-    paddingBottom: 20, // Reduced padding since no tab bar
+    paddingBottom: 100, // Add padding for tab bar
   },
   logoSection: {
     alignItems: 'center',
@@ -325,6 +324,31 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 8,
     fontStyle: 'italic',
+  },
+  announcementsSection: {
+    paddingHorizontal: 20,
+    marginBottom: 32,
+  },
+  announcementHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  announcementTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.text,
+    marginLeft: 8,
+  },
+  announcementText: {
+    fontSize: 14,
+    color: colors.text,
+    lineHeight: 20,
+    marginBottom: 8,
+  },
+  announcementDate: {
+    fontSize: 12,
+    color: colors.textSecondary,
   },
   navigationContainer: {
     paddingHorizontal: 20,
@@ -427,31 +451,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.text,
     lineHeight: 20,
-  },
-  announcementsSection: {
-    paddingHorizontal: 20,
-    marginBottom: 32,
-  },
-  announcementHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  announcementTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.text,
-    marginLeft: 8,
-  },
-  announcementText: {
-    fontSize: 14,
-    color: colors.text,
-    lineHeight: 20,
-    marginBottom: 8,
-  },
-  announcementDate: {
-    fontSize: 12,
-    color: colors.text,
   },
   headerButtonContainer: {
     padding: 6,
