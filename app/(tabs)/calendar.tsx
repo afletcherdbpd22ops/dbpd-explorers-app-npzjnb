@@ -234,7 +234,7 @@ export default function CalendarScreen() {
                   Ceremonies ({getUpcomingEventTypeCount('ceremony')})
                 </Text>
               </Pressable>
-            </TabAwareScrollView>
+            </ScrollView>
           </View>
 
           {/* Events List */}

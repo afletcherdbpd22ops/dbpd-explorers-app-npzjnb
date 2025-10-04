@@ -154,7 +154,7 @@ export default function RosterScreen() {
                   </Text>
                 </Pressable>
               ))}
-            </TabAwareScrollView>
+            </ScrollView>
           </View>
 
           {/* Special Ranks Highlight */}
