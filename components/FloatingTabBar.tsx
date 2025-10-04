@@ -14,6 +14,7 @@ import { IconSymbol } from '@/components/IconSymbol';
 import { BlurView } from 'expo-blur';
 import { useTheme } from '@react-navigation/native';
 import { colors } from '@/styles/commonStyles';
+import { getUnreadMessageCount } from '@/data/messages';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -47,6 +48,7 @@ export default function FloatingTabBar({
   const pathname = usePathname();
   const theme = useTheme();
   const animatedValue = useSharedValue(0);
+  const unreadCount = getUnreadMessageCount();
 
   // Improved active tab detection with better path matching
   const activeTabIndex = React.useMemo(() => {
@@ -161,6 +163,8 @@ export default function FloatingTabBar({
           <View style={styles.tabsContainer}>
             {tabs.map((tab, index) => {
               const isActive = activeTabIndex === index;
+              const isMessagesTab = tab.name === 'messages';
+              const showBadge = isMessagesTab && unreadCount > 0;
 
               return (
                 <TouchableOpacity
@@ -170,11 +174,20 @@ export default function FloatingTabBar({
                   activeOpacity={0.7}
                 >
                   <View style={styles.tabContent}>
-                    <IconSymbol
-                      name={tab.icon}
-                      size={24}
-                      color={isActive ? colors.accent : colors.textSecondary}
-                    />
+                    <View style={styles.iconContainer}>
+                      <IconSymbol
+                        name={tab.icon}
+                        size={24}
+                        color={isActive ? colors.accent : colors.textSecondary}
+                      />
+                      {showBadge && (
+                        <View style={styles.badge}>
+                          <Text style={styles.badgeText}>
+                            {unreadCount > 99 ? '99+' : unreadCount}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
                     <Text
                       style={[
                         styles.tabLabel,
@@ -242,6 +255,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 2,
+  },
+  iconContainer: {
+    position: 'relative',
+  },
+  badge: {
+    position: 'absolute',
+    top: -6,
+    right: -6,
+    backgroundColor: '#FF4444',
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    minWidth: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  badgeText: {
+    color: 'white',
+    fontSize: 10,
+    fontWeight: 'bold',
   },
   tabLabel: {
     fontSize: 10,

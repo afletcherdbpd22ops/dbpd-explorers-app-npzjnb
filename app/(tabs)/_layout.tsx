@@ -28,6 +28,12 @@ export default function TabLayout() {
       label: 'Roster',
     },
     {
+      name: 'messages',
+      route: '/(tabs)/messages',
+      icon: 'message.fill',
+      label: 'Messages',
+    },
+    {
       name: 'community-service',
       route: '/(tabs)/community-service',
       icon: 'heart.fill',
@@ -63,6 +69,10 @@ export default function TabLayout() {
           <Icon sf="person.3.fill" drawable="ic_roster" />
           <Label>Roster</Label>
         </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="messages">
+          <Icon sf="message.fill" drawable="ic_messages" />
+          <Label>Messages</Label>
+        </NativeTabs.Trigger>
         <NativeTabs.Trigger name="community-service">
           <Icon sf="heart.fill" drawable="ic_community_service" />
           <Label>Service</Label>
@@ -91,6 +101,7 @@ export default function TabLayout() {
         <Stack.Screen name="(home)" />
         <Stack.Screen name="calendar" />
         <Stack.Screen name="roster" />
+        <Stack.Screen name="messages" />
         <Stack.Screen name="community-service" />
         <Stack.Screen name="meetings" />
         <Stack.Screen name="profile" />
