@@ -7,7 +7,6 @@ import { Calendar } from 'react-native-calendars';
 import { colors, commonStyles } from '@/styles/commonStyles';
 import { IconSymbol } from '@/components/IconSymbol';
 import EventCard from '@/components/EventCard';
-import TabAwareScrollView from '@/components/TabAwareScrollView';
 import { events, Event } from '@/data/events';
 
 export default function CalendarScreen() {
@@ -102,7 +101,7 @@ export default function CalendarScreen() {
         }}
       />
       <SafeAreaView style={[commonStyles.wrapper]} edges={['bottom']}>
-        <TabAwareScrollView 
+        <ScrollView 
           style={styles.container}
           contentContainerStyle={styles.contentContainer}
           showsVerticalScrollIndicator={false}
@@ -375,7 +374,7 @@ export default function CalendarScreen() {
               </View>
             </View>
           </View>
-        </TabAwareScrollView>
+        </ScrollView>
       </SafeAreaView>
     </>
   );

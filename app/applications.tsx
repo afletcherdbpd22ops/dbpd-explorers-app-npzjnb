@@ -5,7 +5,6 @@ import { Stack, useRouter, Redirect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, commonStyles } from '@/styles/commonStyles';
 import { IconSymbol } from '@/components/IconSymbol';
-import TabAwareScrollView from '@/components/TabAwareScrollView';
 import { memberApplications, NewMemberApplication } from '@/data/applications';
 import { currentUser } from '@/data/auth';
 import { roster } from '@/data/roster';
@@ -115,200 +114,200 @@ export default function ApplicationsScreen() {
         </Pressable>
       </View>
 
-      <TabAwareScrollView 
+      <ScrollView 
         style={styles.scrollContainer}
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
       >
-        {/* Stats Overview */}
-        <View style={styles.statsContainer}>
-          <View style={styles.statCard}>
-            <IconSymbol name="doc.text.fill" size={24} color={colors.primary} />
-            <Text style={styles.statNumber}>{memberApplications.length}</Text>
-            <Text style={styles.statLabel}>Total Applications</Text>
+          {/* Stats Overview */}
+          <View style={styles.statsContainer}>
+            <View style={styles.statCard}>
+              <IconSymbol name="doc.text.fill" size={24} color={colors.primary} />
+              <Text style={styles.statNumber}>{memberApplications.length}</Text>
+              <Text style={styles.statLabel}>Total Applications</Text>
+            </View>
+            
+            <View style={[styles.statCard, { backgroundColor: '#FFF3CD', borderColor: '#ffc107' }]}>
+              <IconSymbol name="clock.fill" size={24} color="#856404" />
+              <Text style={[styles.statNumber, { color: '#856404' }]}>
+                {getStatusCount('pending')}
+              </Text>
+              <Text style={[styles.statLabel, { color: '#856404' }]}>Pending Review</Text>
+            </View>
+            
+            <View style={[styles.statCard, { backgroundColor: '#D4EDDA', borderColor: '#28a745' }]}>
+              <IconSymbol name="checkmark.circle.fill" size={24} color="#155724" />
+              <Text style={[styles.statNumber, { color: '#155724' }]}>
+                {getStatusCount('approved')}
+              </Text>
+              <Text style={[styles.statLabel, { color: '#155724' }]}>Approved</Text>
+            </View>
           </View>
-          
-          <View style={[styles.statCard, { backgroundColor: '#FFF3CD', borderColor: '#ffc107' }]}>
-            <IconSymbol name="clock.fill" size={24} color="#856404" />
-            <Text style={[styles.statNumber, { color: '#856404' }]}>
-              {getStatusCount('pending')}
-            </Text>
-            <Text style={[styles.statLabel, { color: '#856404' }]}>Pending Review</Text>
-          </View>
-          
-          <View style={[styles.statCard, { backgroundColor: '#D4EDDA', borderColor: '#28a745' }]}>
-            <IconSymbol name="checkmark.circle.fill" size={24} color="#155724" />
-            <Text style={[styles.statNumber, { color: '#155724' }]}>
-              {getStatusCount('approved')}
-            </Text>
-            <Text style={[styles.statLabel, { color: '#155724' }]}>Approved</Text>
-          </View>
-        </View>
 
-        {/* Search Bar */}
-        <View style={styles.searchContainer}>
-          <View style={styles.searchBar}>
-            <IconSymbol name="magnifyingglass" size={20} color={colors.textSecondary} />
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Search applications..."
-              placeholderTextColor={colors.textSecondary}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-            />
-            {searchQuery.length > 0 && (
-              <Pressable onPress={() => setSearchQuery('')}>
-                <IconSymbol name="xmark.circle.fill" size={20} color={colors.textSecondary} />
-              </Pressable>
-            )}
-          </View>
-        </View>
-
-        {/* Filter Buttons */}
-        <View style={styles.filterContainer}>
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.filterScrollContent}
-          >
-            {filterButtons.map((filter) => (
-              <Pressable
-                key={filter.key}
-                style={[
-                  styles.filterButton,
-                  selectedFilter === filter.key && styles.filterButtonActive
-                ]}
-                onPress={() => setSelectedFilter(filter.key)}
-              >
-                <Text style={[
-                  styles.filterButtonText,
-                  selectedFilter === filter.key && styles.filterButtonTextActive
-                ]}>
-                  {filter.label} ({filter.count})
-                </Text>
-              </Pressable>
-            ))}
-          </ScrollView>
-        </View>
-
-        {/* Applications List */}
-        <View style={styles.applicationsSection}>
-          <Text style={styles.sectionTitle}>
-            {filteredApplications.length} Application{filteredApplications.length !== 1 ? 's' : ''}
-            {searchQuery && ` matching "${searchQuery}"`}
-          </Text>
-
-          {filteredApplications.length > 0 ? (
-            filteredApplications.map((application) => (
-              <View key={application.id} style={styles.applicationCard}>
-                <Pressable
-                  style={styles.applicationHeader}
-                  onPress={() => handleApplicationPress(application.id)}
-                >
-                  <View style={styles.applicationInfo}>
-                    <Text style={styles.applicantName}>
-                      {application.firstName} {application.lastName}
-                    </Text>
-                    <Text style={styles.applicantEmail}>{application.email}</Text>
-                    <Text style={styles.applicantSchool}>
-                      {application.schoolName} - Grade {application.gradeLevel}
-                    </Text>
-                    <Text style={styles.submittedDate}>
-                      Submitted: {new Date(application.submittedDate).toLocaleDateString()}
-                    </Text>
-                  </View>
-                  
-                  <View style={styles.statusContainer}>
-                    <View style={[styles.statusBadge, {
-                      backgroundColor: getStatusColor(application.status)
-                    }]}>
-                      <IconSymbol 
-                        name={getStatusIcon(application.status)} 
-                        size={16} 
-                        color={colors.text} 
-                      />
-                      <Text style={styles.statusText}>
-                        {application.status.replace('_', ' ').toUpperCase()}
-                      </Text>
-                    </View>
-                    <IconSymbol name="chevron.right" size={16} color={colors.textSecondary} />
-                  </View>
+          {/* Search Bar */}
+          <View style={styles.searchContainer}>
+            <View style={styles.searchBar}>
+              <IconSymbol name="magnifyingglass" size={20} color={colors.textSecondary} />
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Search applications..."
+                placeholderTextColor={colors.textSecondary}
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+              />
+              {searchQuery.length > 0 && (
+                <Pressable onPress={() => setSearchQuery('')}>
+                  <IconSymbol name="xmark.circle.fill" size={20} color={colors.textSecondary} />
                 </Pressable>
+              )}
+            </View>
+          </View>
 
-                {/* Quick Actions for pending applications */}
-                {application.status === 'pending' && canApproveApplications && (
-                  <View style={styles.quickActions}>
-                    <Pressable
-                      style={[styles.actionButton, styles.approveButton]}
-                      onPress={() => handleApproveApplication(application.id)}
-                    >
-                      <IconSymbol name="checkmark" size={16} color={colors.text} />
-                      <Text style={styles.actionButtonText}>Approve</Text>
-                    </Pressable>
-                    
-                    <Pressable
-                      style={[styles.actionButton, styles.rejectButton]}
-                      onPress={() => handleRejectApplication(application.id)}
-                    >
-                      <IconSymbol name="xmark" size={16} color={colors.text} />
-                      <Text style={styles.actionButtonText}>Reject</Text>
-                    </Pressable>
-                    
-                    <Pressable
-                      style={[styles.actionButton, styles.interviewButton]}
-                      onPress={() => Alert.alert('Schedule Interview', 'Interview scheduling feature coming soon!')}
-                    >
-                      <IconSymbol name="calendar" size={16} color={colors.text} />
-                      <Text style={styles.actionButtonText}>Interview</Text>
-                    </Pressable>
-                  </View>
-                )}
-
-                {/* Application Preview */}
-                <View style={styles.applicationPreview}>
-                  <Text style={styles.previewTitle}>Why they want to join:</Text>
-                  <Text style={styles.previewText} numberOfLines={3}>
-                    {application.whyJoin}
+          {/* Filter Buttons */}
+          <View style={styles.filterContainer}>
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.filterScrollContent}
+            >
+              {filterButtons.map((filter) => (
+                <Pressable
+                  key={filter.key}
+                  style={[
+                    styles.filterButton,
+                    selectedFilter === filter.key && styles.filterButtonActive
+                  ]}
+                  onPress={() => setSelectedFilter(filter.key)}
+                >
+                  <Text style={[
+                    styles.filterButtonText,
+                    selectedFilter === filter.key && styles.filterButtonTextActive
+                  ]}>
+                    {filter.label} ({filter.count})
                   </Text>
-                  
-                  <View style={styles.previewDetails}>
-                    <View style={styles.previewItem}>
-                      <IconSymbol name="phone.fill" size={14} color={colors.primary} />
-                      <Text style={styles.previewItemText}>{application.phone}</Text>
-                    </View>
-                    
-                    <View style={styles.previewItem}>
-                      <IconSymbol name="location.fill" size={14} color={colors.primary} />
-                      <Text style={styles.previewItemText}>
-                        {application.city}, {application.state}
+                </Pressable>
+              ))}
+            </ScrollView>
+          </View>
+
+          {/* Applications List */}
+          <View style={styles.applicationsSection}>
+            <Text style={styles.sectionTitle}>
+              {filteredApplications.length} Application{filteredApplications.length !== 1 ? 's' : ''}
+              {searchQuery && ` matching "${searchQuery}"`}
+            </Text>
+
+            {filteredApplications.length > 0 ? (
+              filteredApplications.map((application) => (
+                <View key={application.id} style={styles.applicationCard}>
+                  <Pressable
+                    style={styles.applicationHeader}
+                    onPress={() => handleApplicationPress(application.id)}
+                  >
+                    <View style={styles.applicationInfo}>
+                      <Text style={styles.applicantName}>
+                        {application.firstName} {application.lastName}
+                      </Text>
+                      <Text style={styles.applicantEmail}>{application.email}</Text>
+                      <Text style={styles.applicantSchool}>
+                        {application.schoolName} - Grade {application.gradeLevel}
+                      </Text>
+                      <Text style={styles.submittedDate}>
+                        Submitted: {new Date(application.submittedDate).toLocaleDateString()}
                       </Text>
                     </View>
                     
-                    {application.gpa && (
-                      <View style={styles.previewItem}>
-                        <IconSymbol name="graduationcap.fill" size={14} color={colors.primary} />
-                        <Text style={styles.previewItemText}>GPA: {application.gpa}</Text>
+                    <View style={styles.statusContainer}>
+                      <View style={[styles.statusBadge, {
+                        backgroundColor: getStatusColor(application.status)
+                      }]}>
+                        <IconSymbol 
+                          name={getStatusIcon(application.status)} 
+                          size={16} 
+                          color={colors.text} 
+                        />
+                        <Text style={styles.statusText}>
+                          {application.status.replace('_', ' ').toUpperCase()}
+                        </Text>
                       </View>
-                    )}
+                      <IconSymbol name="chevron.right" size={16} color={colors.textSecondary} />
+                    </View>
+                  </Pressable>
+
+                  {/* Quick Actions for pending applications */}
+                  {application.status === 'pending' && canApproveApplications && (
+                    <View style={styles.quickActions}>
+                      <Pressable
+                        style={[styles.actionButton, styles.approveButton]}
+                        onPress={() => handleApproveApplication(application.id)}
+                      >
+                        <IconSymbol name="checkmark" size={16} color={colors.text} />
+                        <Text style={styles.actionButtonText}>Approve</Text>
+                      </Pressable>
+                      
+                      <Pressable
+                        style={[styles.actionButton, styles.rejectButton]}
+                        onPress={() => handleRejectApplication(application.id)}
+                      >
+                        <IconSymbol name="xmark" size={16} color={colors.text} />
+                        <Text style={styles.actionButtonText}>Reject</Text>
+                      </Pressable>
+                      
+                      <Pressable
+                        style={[styles.actionButton, styles.interviewButton]}
+                        onPress={() => Alert.alert('Schedule Interview', 'Interview scheduling feature coming soon!')}
+                      >
+                        <IconSymbol name="calendar" size={16} color={colors.text} />
+                        <Text style={styles.actionButtonText}>Interview</Text>
+                      </Pressable>
+                    </View>
+                  )}
+
+                  {/* Application Preview */}
+                  <View style={styles.applicationPreview}>
+                    <Text style={styles.previewTitle}>Why they want to join:</Text>
+                    <Text style={styles.previewText} numberOfLines={3}>
+                      {application.whyJoin}
+                    </Text>
+                    
+                    <View style={styles.previewDetails}>
+                      <View style={styles.previewItem}>
+                        <IconSymbol name="phone.fill" size={14} color={colors.primary} />
+                        <Text style={styles.previewItemText}>{application.phone}</Text>
+                      </View>
+                      
+                      <View style={styles.previewItem}>
+                        <IconSymbol name="location.fill" size={14} color={colors.primary} />
+                        <Text style={styles.previewItemText}>
+                          {application.city}, {application.state}
+                        </Text>
+                      </View>
+                      
+                      {application.gpa && (
+                        <View style={styles.previewItem}>
+                          <IconSymbol name="graduationcap.fill" size={14} color={colors.primary} />
+                          <Text style={styles.previewItemText}>GPA: {application.gpa}</Text>
+                        </View>
+                      )}
+                    </View>
                   </View>
                 </View>
+              ))
+            ) : (
+              <View style={styles.noResultsContainer}>
+                <IconSymbol name="doc.text.magnifyingglass" size={40} color={colors.textSecondary} />
+                <Text style={styles.noResultsText}>
+                  {searchQuery 
+                    ? `No applications found matching "${searchQuery}"`
+                    : selectedFilter === 'all'
+                    ? 'No applications found'
+                    : `No ${selectedFilter.replace('_', ' ')} applications found`
+                  }
+                </Text>
               </View>
-            ))
-          ) : (
-            <View style={styles.noResultsContainer}>
-              <IconSymbol name="doc.text.magnifyingglass" size={40} color={colors.textSecondary} />
-              <Text style={styles.noResultsText}>
-                {searchQuery 
-                  ? `No applications found matching "${searchQuery}"`
-                  : selectedFilter === 'all'
-                  ? 'No applications found'
-                  : `No ${selectedFilter.replace('_', ' ')} applications found`
-                }
-              </Text>
-            </View>
-          )}
-        </View>
-      </TabAwareScrollView>
+            )}
+          </View>
+        </ScrollView>
     </SafeAreaView>
   );
 }

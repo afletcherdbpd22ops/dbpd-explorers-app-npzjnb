@@ -182,7 +182,7 @@ export default function PhotoDetailsScreen() {
     if (photo && currentUser.explorerId) {
       setIsLiked(photo.likedBy.includes(currentUser.explorerId));
     }
-  }, [photo]);
+  }, [photo, currentUser.explorerId]);
 
   if (!photo) {
     return (

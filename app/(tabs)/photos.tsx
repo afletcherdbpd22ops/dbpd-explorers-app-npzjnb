@@ -14,7 +14,6 @@ import {
 import { Stack, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { IconSymbol } from '@/components/IconSymbol';
-import TabAwareScrollView from '@/components/TabAwareScrollView';
 import { colors, commonStyles } from '@/styles/commonStyles';
 import { photos, photoAlbums, Photo, PhotoAlbum, likePhoto, unlikePhoto } from '@/data/photos';
 import { currentUser } from '@/data/auth';
@@ -248,7 +247,7 @@ export default function PhotosScreen() {
     }
 
     return (
-      <TabAwareScrollView style={styles.albumsContainer} showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.albumsContainer} showsVerticalScrollIndicator={false}>
         {filteredAlbums.map((album) => (
           <Pressable
             key={album.id}
@@ -272,7 +271,7 @@ export default function PhotosScreen() {
             </View>
           </Pressable>
         ))}
-      </TabAwareScrollView>
+      </ScrollView>
     );
   };
 
@@ -290,7 +289,7 @@ export default function PhotosScreen() {
     }
 
     return (
-      <TabAwareScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.photosGrid}>
           {filteredPhotos.map((photo) => (
             <Pressable
@@ -321,7 +320,7 @@ export default function PhotosScreen() {
             </Pressable>
           ))}
         </View>
-      </TabAwareScrollView>
+      </ScrollView>
     );
   };
 

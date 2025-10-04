@@ -15,7 +15,6 @@ import { BlurView } from 'expo-blur';
 import { useTheme } from '@react-navigation/native';
 import { colors } from '@/styles/commonStyles';
 import { getUnreadMessageCount } from '@/data/messages';
-import { useScroll } from '@/contexts/ScrollContext';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -50,7 +49,6 @@ export default function FloatingTabBar({
   const theme = useTheme();
   const animatedValue = useSharedValue(0);
   const unreadCount = getUnreadMessageCount();
-  const { tabBarVisible } = useScroll();
 
   // Improved active tab detection with better path matching
   const activeTabIndex = React.useMemo(() => {
@@ -146,35 +144,14 @@ export default function FloatingTabBar({
     },
   };
 
-  // Animated style for tab bar visibility
-  const tabBarAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateX: interpolate(
-            tabBarVisible.value,
-            [0, 1],
-            [-120, 0] // Slide out to the left when hidden
-          ),
-        },
-      ],
-      opacity: interpolate(
-        tabBarVisible.value,
-        [0, 1],
-        [0, 1]
-      ),
-    };
-  });
-
   return (
     <SafeAreaView style={styles.safeArea} edges={['left']}>
-      <Animated.View style={[
+      <View style={[
         styles.container,
         {
           height: containerHeight,
           marginLeft: leftMargin
-        },
-        tabBarAnimatedStyle
+        }
       ]}>
         <View
           style={[dynamicStyles.blurContainer, { borderRadius }]}
@@ -224,7 +201,7 @@ export default function FloatingTabBar({
             })}
           </View>
         </View>
-      </Animated.View>
+      </View>
     </SafeAreaView>
   );
 }

@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, ScrollView, Pressable, Alert, TextInput } from 
 import { Stack, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { IconSymbol } from '@/components/IconSymbol';
-import TabAwareScrollView from '@/components/TabAwareScrollView';
 import { colors, commonStyles } from '@/styles/commonStyles';
 import { currentUser } from '@/data/auth';
 import { 
@@ -519,7 +518,7 @@ export default function CommunityServiceScreen() {
         </View>
       </View>
 
-      <TabAwareScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* Tab Navigation */}
         <View style={styles.filterContainer}>
           <Pressable
@@ -657,7 +656,7 @@ export default function CommunityServiceScreen() {
             )}
           </>
         )}
-      </TabAwareScrollView>
+      </ScrollView>
     </SafeAreaView>
   );
 }
