@@ -5,6 +5,7 @@ import { Stack, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, commonStyles } from '@/styles/commonStyles';
 import { IconSymbol } from '@/components/IconSymbol';
+import TabAwareScrollView from '@/components/TabAwareScrollView';
 import { weeklyMeetings, MeetingAttendance } from '@/data/meetings';
 import { roster } from '@/data/roster';
 import { currentUser } from '@/data/auth';
@@ -88,7 +89,7 @@ export default function MeetingsScreen() {
         }}
       />
       <SafeAreaView style={[commonStyles.wrapper]} edges={['bottom']}>
-        <ScrollView 
+        <TabAwareScrollView 
           style={styles.container}
           contentContainerStyle={styles.contentContainer}
           showsVerticalScrollIndicator={false}
@@ -255,7 +256,7 @@ export default function MeetingsScreen() {
               })
             }
           </View>
-        </ScrollView>
+        </TabAwareScrollView>
       </SafeAreaView>
     </>
   );

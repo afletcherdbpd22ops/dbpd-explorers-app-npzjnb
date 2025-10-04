@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, commonStyles } from '@/styles/commonStyles';
 import { IconSymbol } from '@/components/IconSymbol';
 import RosterCard from '@/components/RosterCard';
+import TabAwareScrollView from '@/components/TabAwareScrollView';
 import { roster, Explorer, isSpecialRank } from '@/data/roster';
 
 export default function RosterScreen() {
@@ -80,7 +81,7 @@ export default function RosterScreen() {
         }}
       />
       <SafeAreaView style={[commonStyles.wrapper]} edges={['bottom']}>
-        <ScrollView 
+        <TabAwareScrollView 
           style={styles.container}
           contentContainerStyle={styles.contentContainer}
           showsVerticalScrollIndicator={false}
@@ -153,7 +154,7 @@ export default function RosterScreen() {
                   </Text>
                 </Pressable>
               ))}
-            </ScrollView>
+            </TabAwareScrollView>
           </View>
 
           {/* Special Ranks Highlight */}
@@ -255,7 +256,7 @@ export default function RosterScreen() {
               }
             </View>
           )}
-        </ScrollView>
+        </TabAwareScrollView>
       </SafeAreaView>
     </>
   );

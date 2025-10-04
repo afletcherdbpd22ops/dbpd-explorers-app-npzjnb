@@ -1,11 +1,12 @@
 
 import React from "react";
 import { Stack } from "expo-router";
-import { ScrollView, StyleSheet, View, Text, Pressable, Alert, Image } from "react-native";
+import { StyleSheet, View, Text, Pressable, Alert, Image } from "react-native";
 import { IconSymbol } from "@/components/IconSymbol";
 import { colors, commonStyles } from "@/styles/commonStyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import EventCard from "@/components/EventCard";
+import TabAwareScrollView from "@/components/TabAwareScrollView";
 import { events } from "@/data/events";
 import { useRouter } from "expo-router";
 import { currentUser } from "@/data/auth";
@@ -51,7 +52,7 @@ export default function HomeScreen() {
         }}
       />
       <SafeAreaView style={[commonStyles.wrapper]} edges={['bottom']}>
-        <ScrollView 
+        <TabAwareScrollView 
           style={styles.container}
           contentContainerStyle={styles.contentContainer}
           showsVerticalScrollIndicator={false}
@@ -236,7 +237,7 @@ export default function HomeScreen() {
               <Text style={styles.announcementDate}>Posted 2 days ago</Text>
             </View>
           </View>
-        </ScrollView>
+        </TabAwareScrollView>
       </SafeAreaView>
     </>
   );

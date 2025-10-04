@@ -5,6 +5,7 @@ import { Stack, useRouter, Redirect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, commonStyles } from '@/styles/commonStyles';
 import { IconSymbol } from '@/components/IconSymbol';
+import TabAwareScrollView from '@/components/TabAwareScrollView';
 import { memberApplications, NewMemberApplication } from '@/data/applications';
 import { currentUser } from '@/data/auth';
 import { roster } from '@/data/roster';
@@ -114,7 +115,7 @@ export default function ApplicationsScreen() {
         </Pressable>
       </View>
 
-      <ScrollView 
+      <TabAwareScrollView 
         style={styles.scrollContainer}
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
@@ -187,7 +188,7 @@ export default function ApplicationsScreen() {
                   </Text>
                 </Pressable>
               ))}
-            </ScrollView>
+            </TabAwareScrollView>
           </View>
 
           {/* Applications List */}
@@ -307,7 +308,7 @@ export default function ApplicationsScreen() {
               </View>
             )}
           </View>
-        </ScrollView>
+        </TabAwareScrollView>
     </SafeAreaView>
   );
 }

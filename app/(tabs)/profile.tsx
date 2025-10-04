@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, ScrollView, Pressable, Alert } from "react-nati
 import { Stack, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { IconSymbol } from "@/components/IconSymbol";
+import TabAwareScrollView from "@/components/TabAwareScrollView";
 import { colors, commonStyles } from "@/styles/commonStyles";
 import { currentUser } from "@/data/auth";
 import { roster } from "@/data/roster";
@@ -95,7 +96,7 @@ export default function ProfileScreen() {
         }}
       />
       <SafeAreaView style={[commonStyles.wrapper]} edges={['bottom']}>
-        <ScrollView 
+        <TabAwareScrollView 
           style={styles.container}
           contentContainerStyle={styles.contentContainer}
           showsVerticalScrollIndicator={false}
@@ -296,7 +297,7 @@ export default function ProfileScreen() {
               </Pressable>
             </View>
           </View>
-        </ScrollView>
+        </TabAwareScrollView>
       </SafeAreaView>
     </>
   );

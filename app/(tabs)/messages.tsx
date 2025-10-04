@@ -3,6 +3,7 @@ import { IconSymbol } from '@/components/IconSymbol';
 import { Stack, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, Text, StyleSheet, ScrollView, Pressable, TextInput } from 'react-native';
+import TabAwareScrollView from '@/components/TabAwareScrollView';
 import React, { useState } from 'react';
 import { colors, commonStyles } from '@/styles/commonStyles';
 import { 
@@ -276,7 +277,7 @@ export default function MessagesScreen() {
         />
       </View>
 
-      <ScrollView style={{ flex: 1 }}>
+      <TabAwareScrollView style={{ flex: 1 }}>
         {filteredChats.length === 0 ? (
           <View style={styles.emptyState}>
             <IconSymbol 
@@ -324,7 +325,7 @@ export default function MessagesScreen() {
             )}
           </>
         )}
-      </ScrollView>
+      </TabAwareScrollView>
 
       {/* New Chat Button */}
       <Pressable style={styles.newChatButton} onPress={handleNewChat}>
