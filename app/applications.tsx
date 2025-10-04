@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    backgroundColor: colors.cardLight,
+    backgroundColor: colors.card,
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
@@ -396,12 +396,12 @@ const styles = StyleSheet.create({
   statNumber: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: colors.background,
+    color: colors.text,
     marginTop: 8,
   },
   statLabel: {
     fontSize: 12,
-    color: colors.secondary,
+    color: colors.text,
     marginTop: 4,
     textAlign: 'center',
   },
@@ -412,7 +412,7 @@ const styles = StyleSheet.create({
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.cardLight,
+    backgroundColor: colors.card,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -423,7 +423,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: colors.background,
+    color: colors.text,
   },
   filterContainer: {
     marginBottom: 20,
@@ -463,7 +463,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   applicationCard: {
-    backgroundColor: colors.cardLight,
+    backgroundColor: colors.card,
     borderRadius: 12,
     marginBottom: 12,
     overflow: 'hidden',
@@ -481,22 +481,22 @@ const styles = StyleSheet.create({
   applicantName: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.background,
+    color: colors.text,
     marginBottom: 4,
   },
   applicantEmail: {
     fontSize: 14,
-    color: colors.primary,
+    color: colors.text,
     marginBottom: 2,
   },
   applicantSchool: {
     fontSize: 12,
-    color: colors.secondary,
+    color: colors.text,
     marginBottom: 2,
   },
   submittedDate: {
     fontSize: 12,
-    color: colors.secondary,
+    color: colors.text,
   },
   statusContainer: {
     alignItems: 'center',
@@ -553,12 +553,12 @@ const styles = StyleSheet.create({
   previewTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: colors.background,
+    color: colors.text,
     marginBottom: 8,
   },
   previewText: {
     fontSize: 14,
-    color: colors.secondary,
+    color: colors.text,
     lineHeight: 20,
     marginBottom: 12,
   },
@@ -574,7 +574,7 @@ const styles = StyleSheet.create({
   },
   previewItemText: {
     fontSize: 12,
-    color: colors.secondary,
+    color: colors.text,
   },
   noResultsContainer: {
     alignItems: 'center',

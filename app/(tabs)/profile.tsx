@@ -360,7 +360,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: colors.cardLight,
+    backgroundColor: colors.card,
     justifyContent: 'center',
     alignItems: 'center',
     boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.2)',
@@ -404,7 +404,7 @@ const styles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    backgroundColor: colors.cardLight,
+    backgroundColor: colors.card,
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
@@ -414,12 +414,12 @@ const styles = StyleSheet.create({
   statNumber: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: colors.background,
+    color: colors.text,
     marginTop: 8,
   },
   statLabel: {
     fontSize: 12,
-    color: colors.secondary,
+    color: colors.text,
     marginTop: 4,
     textAlign: 'center',
   },
@@ -434,7 +434,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   infoCard: {
-    backgroundColor: colors.cardLight,
+    backgroundColor: colors.card,
     borderRadius: 12,
     padding: 16,
     boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.2)',
@@ -453,12 +453,12 @@ const styles = StyleSheet.create({
   },
   infoLabel: {
     fontSize: 12,
-    color: colors.secondary,
+    color: colors.text,
     marginBottom: 2,
   },
   infoValue: {
     fontSize: 16,
-    color: colors.background,
+    color: colors.text,
   },
   certificationsContainer: {
     flexDirection: 'row',
@@ -480,7 +480,7 @@ const styles = StyleSheet.create({
     color: '#155724',
   },
   permissionsCard: {
-    backgroundColor: colors.cardLight,
+    backgroundColor: colors.card,
     borderRadius: 12,
     padding: 16,
     boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.2)',
@@ -494,10 +494,10 @@ const styles = StyleSheet.create({
   },
   permissionText: {
     fontSize: 14,
-    color: colors.background,
+    color: colors.text,
   },
   emergencyCard: {
-    backgroundColor: colors.cardLight,
+    backgroundColor: colors.card,
     borderRadius: 12,
     padding: 16,
     borderWidth: 2,
@@ -518,7 +518,7 @@ const styles = StyleSheet.create({
   },
   emergencyContact: {
     fontSize: 16,
-    color: colors.background,
+    color: colors.text,
     fontWeight: '500',
     marginBottom: 4,
   },
@@ -549,7 +549,7 @@ const styles = StyleSheet.create({
   },
   actionCard: {
     width: '48%',
-    backgroundColor: colors.cardLight,
+    backgroundColor: colors.card,
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
@@ -560,7 +560,7 @@ const styles = StyleSheet.create({
   actionText: {
     fontSize: 14,
     fontWeight: '500',
-    color: colors.background,
+    color: colors.text,
     marginTop: 8,
   },
 });

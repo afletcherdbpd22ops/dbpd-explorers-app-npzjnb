@@ -62,6 +62,37 @@ export const commonStyles = StyleSheet.create({
     lineHeight: 24,
     textAlign: 'center',
   },
+  // Additional text styles to ensure all text is white
+  heading: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: colors.text,
+    marginBottom: 12,
+  },
+  subheading: {
+    fontSize: 18,
+    fontWeight: '500',
+    color: colors.text,
+    marginBottom: 8,
+  },
+  body: {
+    fontSize: 14,
+    fontWeight: '400',
+    color: colors.text,
+    lineHeight: 20,
+  },
+  caption: {
+    fontSize: 12,
+    fontWeight: '400',
+    color: colors.text,
+    opacity: 0.8,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: colors.text,
+    marginBottom: 4,
+  },
   section: {
     width: '100%',
     alignItems: 'center',
@@ -73,7 +104,7 @@ export const commonStyles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   card: {
-    backgroundColor: colors.cardLight,
+    backgroundColor: colors.card,
     borderColor: colors.highlight,
     borderWidth: 1,
     borderRadius: 10,

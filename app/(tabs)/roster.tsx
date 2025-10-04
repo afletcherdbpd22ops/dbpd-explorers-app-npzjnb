@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
   },
   specialStatCard: {
     flex: 1,
-    backgroundColor: '#FFFEF7',
+    backgroundColor: colors.card,
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
   },
   statLabel: {
     fontSize: 12,
-    color: colors.textSecondary,
+    color: colors.text,
     marginTop: 4,
   },
   searchContainer: {
@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
   },
   specialFilterButton: {
-    backgroundColor: '#FFFEF7',
+    backgroundColor: colors.card,
     borderColor: '#FFD700',
   },
   specialFilterButtonActive: {
@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
     color: colors.card,
   },
   specialFilterButtonText: {
-    color: '#B8860B',
+    color: colors.text,
     fontWeight: '600',
   },
   specialFilterButtonTextActive: {
@@ -372,7 +372,7 @@ const styles = StyleSheet.create({
   specialRanksHighlight: {
     marginHorizontal: 16,
     marginBottom: 20,
-    backgroundColor: '#FFFEF7',
+    backgroundColor: colors.card,
     borderRadius: 12,
     padding: 16,
     borderWidth: 2,
@@ -386,7 +386,7 @@ const styles = StyleSheet.create({
   specialRanksTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#B8860B',
+    color: colors.text,
     marginLeft: 8,
     flex: 1,
   },
@@ -402,7 +402,7 @@ const styles = StyleSheet.create({
   },
   specialRanksSubtitle: {
     fontSize: 14,
-    color: colors.textSecondary,
+    color: colors.text,
     fontStyle: 'italic',
   },
   rosterSection: {

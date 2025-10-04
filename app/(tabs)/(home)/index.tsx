@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.cardLight,
+    backgroundColor: colors.card,
     borderRadius: 70,
     boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.2)',
     elevation: 6,
@@ -338,12 +338,12 @@ const styles = StyleSheet.create({
   infoTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.background,
+    color: colors.text,
     marginLeft: 8,
   },
   infoText: {
     fontSize: 14,
-    color: colors.background,
+    color: colors.text,
     lineHeight: 20,
   },
   announcementsSection: {
@@ -358,18 +358,18 @@ const styles = StyleSheet.create({
   announcementTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.background,
+    color: colors.text,
     marginLeft: 8,
   },
   announcementText: {
     fontSize: 14,
-    color: colors.background,
+    color: colors.text,
     lineHeight: 20,
     marginBottom: 8,
   },
   announcementDate: {
     fontSize: 12,
-    color: colors.secondary,
+    color: colors.text,
   },
   headerButtonContainer: {
     padding: 6,

@@ -112,18 +112,18 @@ export default function CalendarScreen() {
               onDayPress={handleDatePress}
               markedDates={markedDates}
               theme={{
-                backgroundColor: colors.cardLight,
-                calendarBackground: colors.cardLight,
-                textSectionTitleColor: colors.background,
+                backgroundColor: colors.card,
+                calendarBackground: colors.card,
+                textSectionTitleColor: colors.text,
                 selectedDayBackgroundColor: colors.primary,
                 selectedDayTextColor: colors.text,
                 todayTextColor: colors.primary,
-                dayTextColor: colors.background,
-                textDisabledColor: colors.secondary,
+                dayTextColor: colors.text,
+                textDisabledColor: colors.textSecondary,
                 dotColor: colors.accent,
                 selectedDotColor: colors.text,
                 arrowColor: colors.primary,
-                monthTextColor: colors.background,
+                monthTextColor: colors.text,
                 indicatorColor: colors.primary,
                 textDayFontWeight: '500',
                 textMonthFontWeight: '600',
@@ -153,14 +153,14 @@ export default function CalendarScreen() {
                 style={[
                   styles.filterChip,
                   selectedFilter === 'all' && styles.filterChipActive,
-                  { backgroundColor: selectedFilter === 'all' ? colors.primary : colors.cardLight }
+                  { backgroundColor: selectedFilter === 'all' ? colors.primary : colors.card }
                 ]}
                 onPress={() => setSelectedFilter('all')}
               >
                 <IconSymbol name="calendar" size={16} color={selectedFilter === 'all' ? colors.text : colors.background} />
                 <Text style={[
                   styles.filterChipText,
-                  { color: selectedFilter === 'all' ? colors.text : colors.background }
+                  { color: selectedFilter === 'all' ? colors.text : colors.text }
                 ]}>
                   All ({getUpcomingEventTypeCount('all')})
                 </Text>
@@ -170,14 +170,14 @@ export default function CalendarScreen() {
                 style={[
                   styles.filterChip,
                   selectedFilter === 'training' && styles.filterChipActive,
-                  { backgroundColor: selectedFilter === 'training' ? colors.primary : colors.cardLight }
+                  { backgroundColor: selectedFilter === 'training' ? colors.primary : colors.card }
                 ]}
                 onPress={() => setSelectedFilter('training')}
               >
-                <IconSymbol name="graduationcap.fill" size={16} color={selectedFilter === 'training' ? colors.text : colors.background} />
+                <IconSymbol name="graduationcap.fill" size={16} color={selectedFilter === 'training' ? colors.text : colors.text} />
                 <Text style={[
                   styles.filterChipText,
-                  { color: selectedFilter === 'training' ? colors.text : colors.background }
+                  { color: selectedFilter === 'training' ? colors.text : colors.text }
                 ]}>
                   Training ({getUpcomingEventTypeCount('training')})
                 </Text>
@@ -187,14 +187,14 @@ export default function CalendarScreen() {
                 style={[
                   styles.filterChip,
                   selectedFilter === 'meeting' && styles.filterChipActive,
-                  { backgroundColor: selectedFilter === 'meeting' ? colors.primary : colors.cardLight }
+                  { backgroundColor: selectedFilter === 'meeting' ? colors.primary : colors.card }
                 ]}
                 onPress={() => setSelectedFilter('meeting')}
               >
-                <IconSymbol name="person.3.fill" size={16} color={selectedFilter === 'meeting' ? colors.text : colors.background} />
+                <IconSymbol name="person.3.fill" size={16} color={selectedFilter === 'meeting' ? colors.text : colors.text} />
                 <Text style={[
                   styles.filterChipText,
-                  { color: selectedFilter === 'meeting' ? colors.text : colors.background }
+                  { color: selectedFilter === 'meeting' ? colors.text : colors.text }
                 ]}>
                   Meetings ({getUpcomingEventTypeCount('meeting')})
                 </Text>
@@ -204,14 +204,14 @@ export default function CalendarScreen() {
                 style={[
                   styles.filterChip,
                   selectedFilter === 'community' && styles.filterChipActive,
-                  { backgroundColor: selectedFilter === 'community' ? colors.primary : colors.cardLight }
+                  { backgroundColor: selectedFilter === 'community' ? colors.primary : colors.card }
                 ]}
                 onPress={() => setSelectedFilter('community')}
               >
-                <IconSymbol name="heart.fill" size={16} color={selectedFilter === 'community' ? colors.text : colors.background} />
+                <IconSymbol name="heart.fill" size={16} color={selectedFilter === 'community' ? colors.text : colors.text} />
                 <Text style={[
                   styles.filterChipText,
-                  { color: selectedFilter === 'community' ? colors.text : colors.background }
+                  { color: selectedFilter === 'community' ? colors.text : colors.text }
                 ]}>
                   Community ({getUpcomingEventTypeCount('community')})
                 </Text>
@@ -221,14 +221,14 @@ export default function CalendarScreen() {
                 style={[
                   styles.filterChip,
                   selectedFilter === 'ceremony' && styles.filterChipActive,
-                  { backgroundColor: selectedFilter === 'ceremony' ? colors.primary : colors.cardLight }
+                  { backgroundColor: selectedFilter === 'ceremony' ? colors.primary : colors.card }
                 ]}
                 onPress={() => setSelectedFilter('ceremony')}
               >
-                <IconSymbol name="star.fill" size={16} color={selectedFilter === 'ceremony' ? colors.text : colors.background} />
+                <IconSymbol name="star.fill" size={16} color={selectedFilter === 'ceremony' ? colors.text : colors.text} />
                 <Text style={[
                   styles.filterChipText,
-                  { color: selectedFilter === 'ceremony' ? colors.text : colors.background }
+                  { color: selectedFilter === 'ceremony' ? colors.text : colors.text }
                 ]}>
                   Ceremonies ({getUpcomingEventTypeCount('ceremony')})
                 </Text>
@@ -499,7 +499,7 @@ const styles = StyleSheet.create({
   certificationBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.cardLight,
+    backgroundColor: colors.card,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
@@ -509,7 +509,7 @@ const styles = StyleSheet.create({
   certificationText: {
     fontSize: 12,
     fontWeight: '500',
-    color: colors.accent,
+    color: colors.text,
   },
   serviceHoursBadge: {
     flexDirection: 'row',
