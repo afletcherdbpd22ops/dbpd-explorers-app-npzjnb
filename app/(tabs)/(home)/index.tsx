@@ -73,44 +73,82 @@ export default function HomeScreen() {
             </Text>
           </View>
 
-          {/* Quick Actions */}
-          <View style={styles.quickActionsContainer}>
-            <Text style={styles.sectionTitle}>Quick Actions</Text>
-            <View style={styles.quickActionsGrid}>
+          {/* Navigation Menu */}
+          <View style={styles.navigationContainer}>
+            <Text style={styles.sectionTitle}>Navigation</Text>
+            <View style={styles.navigationGrid}>
               <Pressable 
-                style={[styles.quickActionCard, { backgroundColor: colors.primary }]}
+                style={[styles.navigationCard, { backgroundColor: colors.primary }]}
                 onPress={() => router.push('/(tabs)/calendar')}
               >
-                <IconSymbol name="calendar" size={24} color={colors.text} />
-                <Text style={styles.quickActionText}>Calendar</Text>
+                <IconSymbol name="calendar" size={28} color={colors.text} />
+                <Text style={styles.navigationText}>Calendar</Text>
               </Pressable>
               
               <Pressable 
-                style={[styles.quickActionCard, { backgroundColor: colors.card }]}
+                style={[styles.navigationCard, { backgroundColor: colors.card }]}
                 onPress={() => router.push('/(tabs)/roster')}
               >
-                <IconSymbol name="person.3.fill" size={24} color={colors.text} />
-                <Text style={styles.quickActionText}>Roster</Text>
+                <IconSymbol name="person.3.fill" size={28} color={colors.text} />
+                <Text style={styles.navigationText}>Roster</Text>
               </Pressable>
               
               <Pressable 
-                style={[styles.quickActionCard, { backgroundColor: '#17a2b8' }]}
+                style={[styles.navigationCard, { backgroundColor: '#17a2b8' }]}
                 onPress={() => router.push('/(tabs)/meetings')}
               >
-                <IconSymbol name="person.2.fill" size={24} color={colors.text} />
-                <Text style={styles.quickActionText}>Meetings</Text>
+                <IconSymbol name="person.2.fill" size={28} color={colors.text} />
+                <Text style={styles.navigationText}>Meetings</Text>
+              </Pressable>
+              
+              <Pressable 
+                style={[styles.navigationCard, { backgroundColor: '#e91e63' }]}
+                onPress={() => router.push('/(tabs)/photos')}
+              >
+                <IconSymbol name="photo.stack" size={28} color={colors.text} />
+                <Text style={styles.navigationText}>Photos</Text>
+              </Pressable>
+              
+              <Pressable 
+                style={[styles.navigationCard, { backgroundColor: '#ff9800' }]}
+                onPress={() => router.push('/(tabs)/messages')}
+              >
+                <IconSymbol name="message.fill" size={28} color={colors.text} />
+                <Text style={styles.navigationText}>Messages</Text>
+              </Pressable>
+              
+              <Pressable 
+                style={[styles.navigationCard, { backgroundColor: '#4caf50' }]}
+                onPress={() => router.push('/(tabs)/community-service')}
+              >
+                <IconSymbol name="heart.fill" size={28} color={colors.text} />
+                <Text style={styles.navigationText}>Service</Text>
               </Pressable>
               
               {canViewApplications && (
                 <Pressable 
-                  style={[styles.quickActionCard, { backgroundColor: '#6f42c1' }]}
+                  style={[styles.navigationCard, { backgroundColor: '#6f42c1' }]}
                   onPress={() => router.push('/(tabs)/applications')}
                 >
-                  <IconSymbol name="doc.text.fill" size={24} color={colors.text} />
-                  <Text style={styles.quickActionText}>Applications</Text>
+                  <IconSymbol name="doc.text.fill" size={28} color={colors.text} />
+                  <Text style={styles.navigationText}>Applications</Text>
                 </Pressable>
               )}
               
+              <Pressable 
+                style={[styles.navigationCard, { backgroundColor: '#795548' }]}
+                onPress={() => router.push('/(tabs)/profile')}
+              >
+                <IconSymbol name="person.fill" size={28} color={colors.text} />
+                <Text style={styles.navigationText}>Profile</Text>
+              </Pressable>
+            </View>
+          </View>
+
+          {/* Quick Actions */}
+          <View style={styles.quickActionsContainer}>
+            <Text style={styles.sectionTitle}>Quick Actions</Text>
+            <View style={styles.quickActionsGrid}>
               <Pressable 
                 style={[styles.quickActionCard, { backgroundColor: colors.accent }]}
                 onPress={() => Alert.alert("Google Drive", "This will open the Daytona Beach Police Explorer Google Drive with shared documents, training materials, and resources.", [
@@ -123,19 +161,19 @@ export default function HomeScreen() {
               </Pressable>
               
               <Pressable 
-                style={[styles.quickActionCard, { backgroundColor: '#e91e63' }]}
-                onPress={() => router.push('/(tabs)/photos')}
-              >
-                <IconSymbol name="photo.stack" size={24} color={colors.text} />
-                <Text style={styles.quickActionText}>Photos</Text>
-              </Pressable>
-              
-              <Pressable 
                 style={[styles.quickActionCard, { backgroundColor: '#10b981' }]}
                 onPress={() => router.push('/new-application')}
               >
                 <IconSymbol name="person.badge.plus" size={24} color={colors.text} />
                 <Text style={styles.quickActionText}>Apply</Text>
+              </Pressable>
+              
+              <Pressable 
+                style={[styles.quickActionCard, { backgroundColor: '#f59e0b' }]}
+                onPress={() => router.push('/add-community-service')}
+              >
+                <IconSymbol name="plus.circle.fill" size={24} color={colors.text} />
+                <Text style={styles.quickActionText}>Add Service</Text>
               </Pressable>
             </View>
           </View>
@@ -215,11 +253,11 @@ export default function HomeScreen() {
             <View style={commonStyles.card}>
               <View style={styles.announcementHeader}>
                 <IconSymbol name="megaphone.fill" size={20} color={colors.primary} />
-                <Text style={styles.announcementTitle}>New Web Application Features</Text>
+                <Text style={styles.announcementTitle}>Full Screen Experience</Text>
               </View>
               <Text style={styles.announcementText}>
-                The Explorer program now has a comprehensive web application! Access meeting attendance, 
-                view member applications, track community service hours, and manage your profile all in one place.
+                The app now runs in full screen mode! Navigate between sections using the navigation menu above. 
+                All features are still accessible through the main navigation cards.
               </Text>
               <Text style={styles.announcementDate}>Posted today</Text>
             </View>
@@ -230,7 +268,7 @@ export default function HomeScreen() {
                 <Text style={styles.announcementTitle}>Weekly Meeting Tracking</Text>
               </View>
               <Text style={styles.announcementText}>
-                Attendance tracking is now digital! Check the Meetings tab to view your attendance record 
+                Attendance tracking is now digital! Check the Meetings section to view your attendance record 
                 and see upcoming meeting topics and locations.
               </Text>
               <Text style={styles.announcementDate}>Posted 2 days ago</Text>
@@ -248,7 +286,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   contentContainer: {
-    paddingBottom: 100, // Space for floating tab bar
+    paddingBottom: 20, // Reduced padding since no tab bar
   },
   logoSection: {
     alignItems: 'center',
@@ -287,6 +325,32 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 8,
     fontStyle: 'italic',
+  },
+  navigationContainer: {
+    paddingHorizontal: 20,
+    marginBottom: 32,
+  },
+  navigationGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  navigationCard: {
+    width: '48%',
+    aspectRatio: 1.2,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)',
+    elevation: 6,
+  },
+  navigationText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.text,
+    marginTop: 8,
+    textAlign: 'center',
   },
   quickActionsContainer: {
     paddingHorizontal: 20,
