@@ -140,6 +140,16 @@ export default function ApplicationDetailsScreen() {
             backgroundColor: colors.background,
           },
           headerTintColor: colors.text,
+          headerLeft: () => (
+            <View style={styles.headerLeftContainer}>
+              <Pressable onPress={() => router.push('/(tabs)/(home)')} style={styles.homeHeaderButton}>
+                <IconSymbol name="house.fill" size={20} color={colors.text} />
+              </Pressable>
+              <Pressable onPress={() => router.back()} style={styles.headerBackButton}>
+                <IconSymbol name="chevron.left" size={20} color={colors.text} />
+              </Pressable>
+            </View>
+          ),
           headerRight: () => (
             currentUser.permissions.canApproveApplications && application.status === 'pending' && (
               <View style={styles.headerActions}>
@@ -436,6 +446,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: colors.text,
+  },
+  headerLeftContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  homeHeaderButton: {
+    padding: 6,
+    borderRadius: 6,
+    backgroundColor: colors.primary,
+  },
+  headerBackButton: {
+    padding: 6,
   },
   headerActions: {
     flexDirection: 'row',

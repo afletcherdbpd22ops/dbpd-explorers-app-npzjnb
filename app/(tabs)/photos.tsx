@@ -23,6 +23,12 @@ const { width: screenWidth } = Dimensions.get('window');
 const photoWidth = (screenWidth - 60) / 2; // 2 columns with margins
 
 const styles = StyleSheet.create({
+  homeHeaderButton: {
+    padding: 6,
+    borderRadius: 6,
+    backgroundColor: colors.primary,
+    marginLeft: 8,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -326,14 +332,28 @@ export default function PhotosScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Stack.Screen options={{ headerShown: false }} />
+      <Stack.Screen 
+        options={{ 
+          headerShown: true,
+          title: 'Photo Album',
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTintColor: colors.text,
+          headerLeft: () => (
+            <Pressable onPress={() => router.push('/(tabs)/(home)')} style={styles.homeHeaderButton}>
+              <IconSymbol name="house.fill" size={20} color={colors.text} />
+            </Pressable>
+          ),
+          headerRight: () => (
+            <Pressable onPress={() => Alert.alert('Upload Photo', 'Photo upload feature coming soon!')}>
+              <IconSymbol name="plus" size={24} color={colors.text} />
+            </Pressable>
+          ),
+        }} 
+      />
       
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Photo Album</Text>
-        <Pressable onPress={() => Alert.alert('Upload Photo', 'Photo upload feature coming soon!')}>
-          <IconSymbol name="plus" size={24} color={colors.text} />
-        </Pressable>
-      </View>
+
 
       <View style={styles.searchContainer}>
         <IconSymbol name="magnifyingglass" size={20} color={colors.textSecondary} />

@@ -20,6 +20,12 @@ import { roster } from '@/data/roster';
 import React, { useState } from 'react';
 
 const styles = StyleSheet.create({
+  homeHeaderButton: {
+    padding: 6,
+    borderRadius: 6,
+    backgroundColor: colors.primary,
+    marginLeft: 8,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -493,7 +499,16 @@ export default function CommunityServiceScreen() {
       <Stack.Screen 
         options={{ 
           title: 'Community Service',
-          headerShown: false,
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTintColor: colors.text,
+          headerLeft: () => (
+            <Pressable onPress={() => router.push('/(tabs)/(home)')} style={styles.homeHeaderButton}>
+              <IconSymbol name="house.fill" size={20} color={colors.text} />
+            </Pressable>
+          ),
         }} 
       />
       

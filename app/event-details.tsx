@@ -113,9 +113,14 @@ export default function EventDetailsScreen() {
           },
           headerTintColor: colors.text,
           headerLeft: () => (
-            <Pressable onPress={() => router.back()} style={styles.headerButton}>
-              <IconSymbol name="chevron.left" size={20} color={colors.text} />
-            </Pressable>
+            <View style={styles.headerLeftContainer}>
+              <Pressable onPress={() => router.push('/(tabs)/(home)')} style={styles.homeHeaderButton}>
+                <IconSymbol name="house.fill" size={20} color={colors.text} />
+              </Pressable>
+              <Pressable onPress={() => router.back()} style={styles.headerButton}>
+                <IconSymbol name="chevron.left" size={20} color={colors.text} />
+              </Pressable>
+            </View>
           ),
         }}
       />
@@ -342,6 +347,16 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingBottom: 40,
+  },
+  headerLeftContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  homeHeaderButton: {
+    padding: 6,
+    borderRadius: 6,
+    backgroundColor: colors.primary,
   },
   headerButton: {
     padding: 6,

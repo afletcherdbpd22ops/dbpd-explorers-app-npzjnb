@@ -78,6 +78,11 @@ export default function MeetingsScreen() {
             backgroundColor: colors.background,
           },
           headerTintColor: colors.text,
+          headerLeft: () => (
+            <Pressable onPress={() => router.push('/(tabs)/(home)')} style={styles.homeHeaderButton}>
+              <IconSymbol name="house.fill" size={20} color={colors.text} />
+            </Pressable>
+          ),
           headerRight: () => (
             currentUser.permissions.canEditCalendar && (
               <Pressable onPress={handleAddMeeting} style={styles.headerButton}>
@@ -262,6 +267,12 @@ export default function MeetingsScreen() {
 }
 
 const styles = StyleSheet.create({
+  homeHeaderButton: {
+    padding: 6,
+    borderRadius: 6,
+    backgroundColor: colors.primary,
+    marginLeft: 8,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.background,

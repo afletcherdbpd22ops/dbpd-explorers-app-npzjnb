@@ -108,6 +108,9 @@ export default function ApplicationsScreen() {
       <Stack.Screen options={{ headerShown: false }} />
       
       <View style={styles.header}>
+        <Pressable onPress={() => router.push('/(tabs)/(home)')} style={styles.homeButton}>
+          <IconSymbol name="house.fill" size={24} color={colors.text} />
+        </Pressable>
         <Text style={styles.headerTitle}>Applications</Text>
         <Pressable onPress={() => router.push('/new-application')}>
           <IconSymbol name="plus" size={24} color={colors.text} />
@@ -325,6 +328,11 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
+  },
+  homeButton: {
+    padding: 6,
+    borderRadius: 8,
+    backgroundColor: colors.primary,
   },
   headerTitle: {
     fontSize: 24,

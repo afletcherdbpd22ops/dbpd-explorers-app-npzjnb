@@ -77,6 +77,11 @@ export default function RosterScreen() {
             backgroundColor: colors.background,
           },
           headerTintColor: colors.text,
+          headerLeft: () => (
+            <Pressable onPress={() => router.push('/(tabs)/(home)')} style={styles.homeHeaderButton}>
+              <IconSymbol name="house.fill" size={20} color={colors.text} />
+            </Pressable>
+          ),
         }}
       />
       <SafeAreaView style={[commonStyles.wrapper]} edges={['bottom']}>
@@ -262,6 +267,12 @@ export default function RosterScreen() {
 }
 
 const styles = StyleSheet.create({
+  homeHeaderButton: {
+    padding: 6,
+    borderRadius: 6,
+    backgroundColor: colors.primary,
+    marginLeft: 8,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.background,

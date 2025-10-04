@@ -16,6 +16,25 @@ import { roster } from '@/data/roster';
 import { currentUser } from '@/data/auth';
 
 const styles = StyleSheet.create({
+  homeHeaderButton: {
+    padding: 6,
+    borderRadius: 6,
+    backgroundColor: colors.primary,
+    marginLeft: 8,
+  },
+  headerUnreadBadge: {
+    backgroundColor: colors.primary,
+    borderRadius: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    minWidth: 24,
+    alignItems: 'center',
+  },
+  headerUnreadText: {
+    color: colors.background,
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -251,19 +270,32 @@ export default function MessagesScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Stack.Screen options={{ headerShown: false }} />
+      <Stack.Screen 
+        options={{ 
+          headerShown: true,
+          title: 'Messages',
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTintColor: colors.text,
+          headerLeft: () => (
+            <Pressable onPress={() => router.push('/(tabs)/(home)')} style={styles.homeHeaderButton}>
+              <IconSymbol name="house.fill" size={20} color={colors.text} />
+            </Pressable>
+          ),
+          headerRight: () => (
+            unreadCount > 0 && (
+              <View style={styles.headerUnreadBadge}>
+                <Text style={styles.headerUnreadText}>
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                </Text>
+              </View>
+            )
+          ),
+        }} 
+      />
       
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Messages</Text>
-        {unreadCount > 0 && (
-          <View style={styles.unreadBadge}>
-            <Text style={styles.unreadText}>
-              {unreadCount > 99 ? '99+' : unreadCount}
-            </Text>
-          </View>
-        )}
-      </View>
+
 
       {/* Search */}
       <View style={styles.searchContainer}>

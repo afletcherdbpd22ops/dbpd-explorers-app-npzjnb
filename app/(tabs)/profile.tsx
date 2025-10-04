@@ -26,6 +26,11 @@ export default function ProfileScreen() {
               backgroundColor: colors.background,
             },
             headerTintColor: colors.text,
+            headerLeft: () => (
+              <Pressable onPress={() => router.push('/(tabs)/(home)')} style={styles.homeHeaderButton}>
+                <IconSymbol name="house.fill" size={20} color={colors.text} />
+              </Pressable>
+            ),
           }}
         />
         <SafeAreaView style={[commonStyles.wrapper]} edges={['bottom']}>
@@ -87,6 +92,11 @@ export default function ProfileScreen() {
             backgroundColor: colors.background,
           },
           headerTintColor: colors.text,
+          headerLeft: () => (
+            <Pressable onPress={() => router.push('/(tabs)/(home)')} style={styles.homeHeaderButton}>
+              <IconSymbol name="house.fill" size={20} color={colors.text} />
+            </Pressable>
+          ),
           headerRight: () => (
             <Pressable onPress={handleEditProfile} style={styles.headerButton}>
               <IconSymbol name="pencil" size={20} color={colors.accent} />
@@ -303,6 +313,12 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
+  homeHeaderButton: {
+    padding: 6,
+    borderRadius: 6,
+    backgroundColor: colors.primary,
+    marginLeft: 8,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.background,
