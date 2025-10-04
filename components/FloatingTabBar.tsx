@@ -115,32 +115,31 @@ export default function FloatingTabBar({
     };
   });
 
-  // Dynamic styles with blue theme
+  // Dynamic styles with solid blue theme (no transparency)
   const dynamicStyles = {
     blurContainer: {
       ...styles.blurContainer,
       ...Platform.select({
         ios: {
-          backgroundColor: 'rgba(30, 64, 175, 0.9)', // Blue background with transparency
+          backgroundColor: '#1e40af', // Solid blue background
         },
         android: {
-          backgroundColor: 'rgba(30, 64, 175, 0.95)', // Slightly more opaque for Android
+          backgroundColor: '#1e40af', // Solid blue background
           elevation: 8,
         },
         web: {
-          backgroundColor: 'rgba(30, 64, 175, 0.95)',
-          backdropFilter: 'blur(10px)',
+          backgroundColor: '#1e40af', // Solid blue background
           boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
         },
       }),
     },
     background: {
       ...styles.background,
-      backgroundColor: Platform.OS === 'ios' ? 'transparent' : 'rgba(30, 64, 175, 0.1)',
+      backgroundColor: '#1e40af', // Solid blue background
     },
     indicator: {
       ...styles.indicator,
-      backgroundColor: 'rgba(255, 255, 255, 0.15)', // White overlay for active indicator
+      backgroundColor: 'rgba(255, 255, 255, 0.2)', // Slightly transparent white overlay for active indicator
       width: `${(100 / tabs.length) - 3}%`, // Dynamic width based on number of tabs
     },
   };
@@ -154,8 +153,7 @@ export default function FloatingTabBar({
           marginBottom: bottomMargin ?? (Platform.OS === 'ios' ? 10 : 20)
         }
       ]}>
-        <BlurView
-          intensity={Platform.OS === 'web' ? 0 : 80}
+        <View
           style={[dynamicStyles.blurContainer, { borderRadius }]}
         >
           <View style={dynamicStyles.background} />
@@ -178,7 +176,7 @@ export default function FloatingTabBar({
                       <IconSymbol
                         name={tab.icon}
                         size={24}
-                        color={isActive ? colors.accent : colors.textSecondary}
+                        color={isActive ? '#ffffff' : '#d1d5db'}
                       />
                       {showBadge && (
                         <View style={styles.badge}>
@@ -191,8 +189,8 @@ export default function FloatingTabBar({
                     <Text
                       style={[
                         styles.tabLabel,
-                        { color: colors.textSecondary },
-                        isActive && { color: colors.accent, fontWeight: '600' },
+                        { color: '#d1d5db' },
+                        isActive && { color: '#ffffff', fontWeight: '600' },
                       ]}
                     >
                       {tab.label}
@@ -202,7 +200,7 @@ export default function FloatingTabBar({
               );
             })}
           </View>
-        </BlurView>
+        </View>
       </View>
     </SafeAreaView>
   );
