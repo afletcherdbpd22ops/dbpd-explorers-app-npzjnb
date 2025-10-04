@@ -13,6 +13,12 @@ export interface User {
   };
 }
 
+// Authentication state
+export interface AuthState {
+  isAuthenticated: boolean;
+  user: User | null;
+}
+
 // Mock current user - in a real app this would come from authentication
 export const currentUser: User = {
   id: 'user3',
@@ -26,6 +32,34 @@ export const currentUser: User = {
     canApproveApplications: true,
     canEditLogo: false,
   },
+};
+
+// Global authentication state (in a real app, use secure storage like Keychain/Keystore)
+declare global {
+  var isAuthenticated: boolean | undefined;
+}
+
+// Initialize authentication state
+if (typeof global.isAuthenticated === 'undefined') {
+  global.isAuthenticated = false;
+}
+
+// Authentication functions
+export const getAuthState = (): AuthState => {
+  return {
+    isAuthenticated: global.isAuthenticated || false,
+    user: global.isAuthenticated ? currentUser : null,
+  };
+};
+
+export const setAuthState = (isAuthenticated: boolean) => {
+  global.isAuthenticated = isAuthenticated;
+  console.log('Auth state changed:', isAuthenticated);
+};
+
+export const signOut = () => {
+  global.isAuthenticated = false;
+  console.log('User signed out');
 };
 
 // Function to check permissions based on rank

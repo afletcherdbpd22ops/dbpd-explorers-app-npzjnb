@@ -3,6 +3,7 @@ import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
 
 export const colors = {
   background: '#ADD8E6',       // Light Blue Background
+  lightBlue: '#ADD8E6',        // Light Blue (alias for background)
   text: '#000000',             // Black text
   textSecondary: '#333333',    // Dark gray for secondary text
   primary: '#3b82f6',          // Bright Blue
@@ -111,6 +112,10 @@ export const commonStyles = StyleSheet.create({
     padding: 16,
     marginVertical: 8,
     width: '100%',
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+    elevation: 3,
+  },
+  shadow: {
     boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
     elevation: 3,
   },
