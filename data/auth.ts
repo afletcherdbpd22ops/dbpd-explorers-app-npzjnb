@@ -34,41 +34,29 @@ export const currentUser: User = {
   },
 };
 
-// Global authentication state (in a real app, use secure storage like Keychain/Keystore)
-declare global {
-  let isAuthenticated: boolean | undefined;
-}
-
-// Initialize authentication state
-if (typeof global.isAuthenticated === 'undefined') {
-  global.isAuthenticated = false;
-}
-
 // Authentication functions
 export const getAuthState = (): AuthState => {
   return {
-    isAuthenticated: global.isAuthenticated || false,
-    user: global.isAuthenticated ? currentUser : null,
+    isAuthenticated: true, // Always authenticated for now
+    user: currentUser,
   };
 };
 
 export const setAuthState = (isAuthenticated: boolean) => {
-  global.isAuthenticated = isAuthenticated;
   console.log('Auth state changed:', isAuthenticated);
 };
 
 export const signOut = () => {
-  global.isAuthenticated = false;
   console.log('User signed out');
 };
 
 // Function to check permissions based on rank
 export const getUserPermissions = (rank: string): User['permissions'] => {
-  const isAdvisorRank = rank.toLowerCase().includes('advisor');
-  const canEdit = ['major', 'captain', 'lieutenant', 'sergeant', 'sgt', 'advisor'].some(
+  var isAdvisorRank = rank.toLowerCase().includes('advisor');
+  var canEdit = ['major', 'captain', 'lieutenant', 'sergeant', 'sgt', 'advisor'].some(
     r => rank.toLowerCase().includes(r)
   );
-  const canApprove = ['major', 'captain', 'advisor'].some(
+  var canApprove = ['major', 'captain', 'advisor'].some(
     r => rank.toLowerCase().includes(r)
   );
 

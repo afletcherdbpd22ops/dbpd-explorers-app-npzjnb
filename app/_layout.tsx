@@ -1,8 +1,8 @@
 
 import "react-native-reanimated";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useFonts } from "expo-font";
-import { Stack, router } from "expo-router";
+import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { SystemBars } from "react-native-edge-to-edge";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -17,13 +17,12 @@ import {
 import { StatusBar } from "expo-status-bar";
 import { Button } from "@/components/button";
 import { WidgetProvider } from "@/contexts/WidgetContext";
-import { getAuthState } from "@/data/auth";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export const unstable_settings = {
-  initialRouteName: "password",
+  initialRouteName: "(tabs)",
 };
 
 export default function RootLayout() {
@@ -32,23 +31,10 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
-  const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
-      
-      // Check authentication state
-      const authState = getAuthState();
-      console.log('Initial auth state:', authState.isAuthenticated);
-      
-      if (authState.isAuthenticated) {
-        router.replace('/(tabs)');
-      } else {
-        router.replace('/password');
-      }
-      
-      setAuthChecked(true);
     }
   }, [loaded]);
 
@@ -64,7 +50,7 @@ export default function RootLayout() {
     }
   }, [networkState.isConnected, networkState.isInternetReachable]);
 
-  if (!loaded || !authChecked) {
+  if (!loaded) {
     return null;
   }
 
@@ -106,21 +92,11 @@ export default function RootLayout() {
                 headerShown: false,
               }}
             >
-              {/* Password Screen */}
-              <Stack.Screen 
-                name="password" 
-                options={{ 
-                  headerShown: false,
-                  gestureEnabled: false, // Prevent swipe back
-                }} 
-              />
-              
               {/* Main app with tabs */}
               <Stack.Screen 
                 name="(tabs)" 
                 options={{ 
                   headerShown: false,
-                  gestureEnabled: false, // Prevent swipe back to password
                 }} 
               />
 
