@@ -1,3 +1,4 @@
+
 // This file is a fallback for using MaterialIcons on Android and web.
 
 import React from "react";
@@ -70,6 +71,7 @@ const MAPPING = {
   // Media & Content
   "photo.fill": "image",
   "photo": "image-outlined",
+  "photo.stack": "photo-library", // Added mapping for photo album/stack
   "camera.fill": "camera-alt",
   "camera": "camera-alt",
   "video.fill": "videocam",
@@ -139,6 +141,8 @@ const MAPPING = {
   "person.fill": "person",
   "person.2.fill": "group",
   "person.2": "group",
+  "person.3.fill": "groups", // Added mapping for roster (3+ people)
+  "person.3": "groups",
   "person.circle.fill": "account-circle",
   "person.circle": "account-circle",
   "person.crop.circle.fill": "account-circle",
