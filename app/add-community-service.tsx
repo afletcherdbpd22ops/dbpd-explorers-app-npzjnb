@@ -205,8 +205,8 @@ export default function AddCommunityServiceScreen() {
     } else {
       // Basic email or phone validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-      if (!emailRegex.test(formData.supervisorContact) && !phoneRegex.test(formData.supervisorContact.replace(/[\s\-\(\)]/g, ''))) {
+      const phoneRegex = /^[+]?[1-9][\d]{0,15}$/;
+      if (!emailRegex.test(formData.supervisorContact) && !phoneRegex.test(formData.supervisorContact.replace(/[\s\-()]/g, ''))) {
         newErrors.supervisorContact = 'Please enter a valid email or phone number';
       }
     }
