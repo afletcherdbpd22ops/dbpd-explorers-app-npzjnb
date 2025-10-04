@@ -3,8 +3,8 @@ import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
 
 export const colors = {
   background: '#1e3a8a',       // Deep Blue Background
-  text: '#ffffff',             // White text for contrast
-  textSecondary: '#cbd5e1',    // Light gray for secondary text
+  text: '#000000',             // Black text
+  textSecondary: '#374151',    // Dark gray for secondary text
   primary: '#3b82f6',          // Bright Blue
   secondary: '#6c757d',        // Gray
   accent: '#fbbf24',           // Golden Yellow
@@ -62,7 +62,7 @@ export const commonStyles = StyleSheet.create({
     lineHeight: 24,
     textAlign: 'center',
   },
-  // Additional text styles to ensure all text is white
+  // Additional text styles to ensure all text is black
   heading: {
     fontSize: 20,
     fontWeight: '600',
