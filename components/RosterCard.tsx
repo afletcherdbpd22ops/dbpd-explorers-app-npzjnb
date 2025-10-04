@@ -3,7 +3,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { IconSymbol } from './IconSymbol';
 import { colors } from '@/styles/commonStyles';
-import { Explorer, isSpecialRank } from '@/data/roster';
+import { Explorer, isSpecialRank, getRosterCardColor } from '@/data/roster';
 
 interface RosterCardProps {
   explorer: Explorer;
@@ -51,6 +51,7 @@ export default function RosterCard({ explorer, onPress }: RosterCardProps) {
   };
 
   const isSpecial = isSpecialRank(explorer.rank);
+  const cardBackgroundColor = getRosterCardColor(explorer);
 
   // Calculate attendance percentages
   const weeklyAttendanceRate = explorer.totalWeeklyMeetings 
@@ -64,7 +65,8 @@ export default function RosterCard({ explorer, onPress }: RosterCardProps) {
   return (
     <Pressable 
       style={[
-        styles.card,
+        styles.card, 
+        { backgroundColor: cardBackgroundColor },
         isSpecial && styles.specialRankCard
       ]} 
       onPress={onPress}
@@ -185,7 +187,6 @@ export default function RosterCard({ explorer, onPress }: RosterCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.card,
     borderRadius: 12,
     padding: 16,
     marginVertical: 6,
@@ -193,8 +194,6 @@ const styles = StyleSheet.create({
     boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
     elevation: 3,
     position: 'relative',
-    borderWidth: 1,
-    borderColor: colors.border,
   },
   specialRankCard: {
     borderWidth: 2,
@@ -222,7 +221,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.text,
+    color: '#FFFFFF',
     marginBottom: 2,
   },
   specialName: {
@@ -240,7 +239,7 @@ const styles = StyleSheet.create({
   },
   joinDate: {
     fontSize: 12,
-    color: colors.textSecondary,
+    color: 'rgba(255, 255, 255, 0.8)',
   },
   statusBadge: {
     paddingHorizontal: 8,
@@ -253,17 +252,15 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   attendanceSection: {
-    backgroundColor: colors.surface,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     borderRadius: 8,
     padding: 12,
     marginBottom: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
   },
   attendanceSectionTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: colors.text,
+    color: '#FFFFFF',
     marginBottom: 8,
   },
   attendanceGrid: {
@@ -276,21 +273,19 @@ const styles = StyleSheet.create({
   },
   attendanceLabel: {
     fontSize: 12,
-    color: colors.textSecondary,
+    color: 'rgba(255, 255, 255, 0.9)',
     flex: 1,
   },
   attendanceValue: {
     fontSize: 12,
     fontWeight: '600',
-    color: colors.text,
+    color: '#FFFFFF',
   },
   credentialsSection: {
-    backgroundColor: colors.surface,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 8,
     padding: 12,
     marginBottom: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
   },
   credentialGroup: {
     marginBottom: 8,
@@ -298,7 +293,7 @@ const styles = StyleSheet.create({
   credentialTitle: {
     fontSize: 12,
     fontWeight: '600',
-    color: colors.text,
+    color: '#FFFFFF',
     marginBottom: 6,
   },
   badgeContainer: {
@@ -307,13 +302,13 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   certificationBadge: {
-    backgroundColor: colors.primary,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
   },
   achievementBadge: {
-    backgroundColor: '#FFD700',
+    backgroundColor: 'rgba(255, 215, 0, 0.2)',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
@@ -322,7 +317,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   moreBadge: {
-    backgroundColor: colors.secondary,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
@@ -339,12 +334,12 @@ const styles = StyleSheet.create({
   },
   contactInfo: {
     borderTopWidth: 1,
-    borderTopColor: colors.border,
+    borderTopColor: 'rgba(255, 255, 255, 0.2)',
     paddingTop: 12,
   },
   contact: {
     fontSize: 14,
-    color: colors.textSecondary,
+    color: 'rgba(255, 255, 255, 0.9)',
     marginBottom: 4,
   },
 });

@@ -1,8 +1,7 @@
-
 import "react-native-reanimated";
 import React, { useEffect } from "react";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Stack, router } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { SystemBars } from "react-native-edge-to-edge";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -78,7 +77,6 @@ export default function RootLayout() {
       notification: "rgb(255, 69, 58)", // System Red (Dark Mode)
     },
   };
-  
   return (
     <>
       <StatusBar style="auto" animated />
@@ -87,18 +85,9 @@ export default function RootLayout() {
         >
           <WidgetProvider>
             <GestureHandlerRootView>
-            <Stack
-              screenOptions={{
-                headerShown: false,
-              }}
-            >
+            <Stack>
               {/* Main app with tabs */}
-              <Stack.Screen 
-                name="(tabs)" 
-                options={{ 
-                  headerShown: false,
-                }} 
-              />
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
               {/* Modal Demo Screens */}
               <Stack.Screen

@@ -2,18 +2,15 @@
 import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
 
 export const colors = {
-  background: '#f8f9fa',       // Light gray background
-  text: '#212529',             // Dark text
-  textSecondary: '#6c757d',    // Gray for secondary text
+  background: '#ADD8E6',       // Light Blue Background
+  text: '#000000',             // Black text
+  textSecondary: '#333333',    // Dark gray for secondary text
   primary: '#3b82f6',          // Bright Blue
   secondary: '#6c757d',        // Gray
   accent: '#fbbf24',           // Golden Yellow
-  card: '#ffffff',             // White cards
-  cardBackground: '#ffffff',   // White card background
-  surface: '#f8f9fa',          // Light surface color
-  border: '#dee2e6',           // Light border color
+  card: '#ffffff',             // White cards for better contrast on light blue
   highlight: '#2563eb',        // Blue highlight
-  cardLight: '#ffffff',        // White cards
+  cardLight: '#ffffff',        // White cards for better contrast
 };
 
 export const buttonStyles = StyleSheet.create({
@@ -65,6 +62,7 @@ export const commonStyles = StyleSheet.create({
     lineHeight: 24,
     textAlign: 'center',
   },
+  // Additional text styles to ensure all text is black
   heading: {
     fontSize: 20,
     fontWeight: '600',
@@ -86,7 +84,8 @@ export const commonStyles = StyleSheet.create({
   caption: {
     fontSize: 12,
     fontWeight: '400',
-    color: colors.textSecondary,
+    color: colors.text,
+    opacity: 0.8,
   },
   label: {
     fontSize: 14,
@@ -106,16 +105,12 @@ export const commonStyles = StyleSheet.create({
   },
   card: {
     backgroundColor: colors.card,
-    borderColor: colors.border,
+    borderColor: colors.highlight,
     borderWidth: 1,
     borderRadius: 10,
     padding: 16,
     marginVertical: 8,
     width: '100%',
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-    elevation: 3,
-  },
-  shadow: {
     boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
     elevation: 3,
   },

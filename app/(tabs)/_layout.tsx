@@ -5,10 +5,19 @@ import { NativeTabs, Icon, Label } from 'expo-router/unstable-native-tabs';
 import { Stack } from 'expo-router';
 import FloatingTabBar, { TabBarItem } from '@/components/FloatingTabBar';
 import { colors } from '@/styles/commonStyles';
+import { currentUser } from '@/data/auth';
+import { roster } from '@/data/roster';
 
 export default function TabLayout() {
-  // Define the tabs configuration
-  const tabs: TabBarItem[] = [
+  // Get current user's rank to determine tab visibility
+  const currentExplorer = currentUser.explorerId ? roster.find(e => e.id === currentUser.explorerId) : null;
+  const userRank = currentExplorer?.rank || '';
+  
+  // Check if user can view applications (advisors and Explorer Major only)
+  const canViewApplications = userRank.toLowerCase().includes('advisor') || userRank.toLowerCase().includes('major');
+
+  // Define the base tabs configuration
+  const baseTabs: TabBarItem[] = [
     {
       name: '(home)',
       route: '/(tabs)/(home)/',
@@ -26,6 +35,18 @@ export default function TabLayout() {
       route: '/(tabs)/roster',
       icon: 'person.3.fill',
       label: 'Roster',
+    },
+    {
+      name: 'photos',
+      route: '/(tabs)/photos',
+      icon: 'photo.stack',
+      label: 'Photos',
+    },
+    {
+      name: 'messages',
+      route: '/(tabs)/messages',
+      icon: 'message.fill',
+      label: 'Messages',
     },
     {
       name: 'community-service',
@@ -47,6 +68,20 @@ export default function TabLayout() {
     },
   ];
 
+  // Add applications tab for advisors and Explorer Major
+  const tabs: TabBarItem[] = canViewApplications 
+    ? [
+        ...baseTabs.slice(0, 4), // Home, Calendar, Roster, Photos
+        {
+          name: 'applications',
+          route: '/(tabs)/applications',
+          icon: 'doc.text',
+          label: 'Applications',
+        },
+        ...baseTabs.slice(4), // Messages, Service, Meetings, Profile
+      ]
+    : baseTabs;
+
   // Use NativeTabs for iOS, custom FloatingTabBar for Android and Web
   if (Platform.OS === 'ios') {
     return (
@@ -62,6 +97,20 @@ export default function TabLayout() {
         <NativeTabs.Trigger name="roster">
           <Icon sf="person.3.fill" drawable="ic_roster" />
           <Label>Roster</Label>
+        </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="photos">
+          <Icon sf="photo.stack" drawable="ic_photos" />
+          <Label>Photos</Label>
+        </NativeTabs.Trigger>
+        {canViewApplications && (
+          <NativeTabs.Trigger name="applications">
+            <Icon sf="doc.text" drawable="ic_applications" />
+            <Label>Applications</Label>
+          </NativeTabs.Trigger>
+        )}
+        <NativeTabs.Trigger name="messages">
+          <Icon sf="message.fill" drawable="ic_messages" />
+          <Label>Messages</Label>
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="community-service">
           <Icon sf="heart.fill" drawable="ic_community_service" />
@@ -91,6 +140,9 @@ export default function TabLayout() {
         <Stack.Screen name="(home)" />
         <Stack.Screen name="calendar" />
         <Stack.Screen name="roster" />
+        <Stack.Screen name="photos" />
+        <Stack.Screen name="applications" />
+        <Stack.Screen name="messages" />
         <Stack.Screen name="community-service" />
         <Stack.Screen name="meetings" />
         <Stack.Screen name="profile" />

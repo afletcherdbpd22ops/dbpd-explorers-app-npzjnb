@@ -13,12 +13,6 @@ export interface User {
   };
 }
 
-// Authentication state
-export interface AuthState {
-  isAuthenticated: boolean;
-  user: User | null;
-}
-
 // Mock current user - in a real app this would come from authentication
 export const currentUser: User = {
   id: 'user3',
@@ -34,29 +28,13 @@ export const currentUser: User = {
   },
 };
 
-// Authentication functions
-export const getAuthState = (): AuthState => {
-  return {
-    isAuthenticated: true, // Always authenticated for now
-    user: currentUser,
-  };
-};
-
-export const setAuthState = (isAuthenticated: boolean) => {
-  console.log('Auth state changed:', isAuthenticated);
-};
-
-export const signOut = () => {
-  console.log('User signed out');
-};
-
 // Function to check permissions based on rank
 export const getUserPermissions = (rank: string): User['permissions'] => {
-  var isAdvisorRank = rank.toLowerCase().includes('advisor');
-  var canEdit = ['major', 'captain', 'lieutenant', 'sergeant', 'sgt', 'advisor'].some(
+  const isAdvisorRank = rank.toLowerCase().includes('advisor');
+  const canEdit = ['major', 'captain', 'lieutenant', 'sergeant', 'sgt', 'advisor'].some(
     r => rank.toLowerCase().includes(r)
   );
-  var canApprove = ['major', 'captain', 'advisor'].some(
+  const canApprove = ['major', 'captain', 'advisor'].some(
     r => rank.toLowerCase().includes(r)
   );
 

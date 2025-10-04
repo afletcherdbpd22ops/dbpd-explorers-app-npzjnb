@@ -44,6 +44,12 @@ export const isAdvisor = (rank: string): boolean => {
   return rank.toLowerCase().includes('advisor');
 };
 
+// Helper function to get roster card color based on rank
+export const getRosterCardColor = (explorer: Explorer): string => {
+  // Return standard card color for all explorers (no background coloring)
+  return '#1e40af'; // colors.card from commonStyles.ts
+};
+
 export const roster: Explorer[] = [
   {
     id: '1',
