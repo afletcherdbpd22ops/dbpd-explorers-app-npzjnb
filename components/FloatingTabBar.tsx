@@ -22,7 +22,7 @@ import Animated, {
   interpolate,
 } from 'react-native-reanimated';
 
-const { width: screenWidth } = Dimensions.get('window');
+const { height: screenHeight } = Dimensions.get('window');
 
 export interface TabBarItem {
   name: string;
@@ -33,16 +33,16 @@ export interface TabBarItem {
 
 interface FloatingTabBarProps {
   tabs: TabBarItem[];
-  containerWidth?: number;
+  containerHeight?: number;
   borderRadius?: number;
-  bottomMargin?: number;
+  leftMargin?: number;
 }
 
 export default function FloatingTabBar({
   tabs,
-  containerWidth = Math.min(screenWidth - 40, Math.max(tabs.length * 60, 300)), // Dynamic width based on tab count with minimum
+  containerHeight = Math.min(screenHeight - 200, Math.max(tabs.length * 70, 400)), // Dynamic height based on tab count
   borderRadius = 25,
-  bottomMargin
+  leftMargin = 20
 }: FloatingTabBarProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -101,14 +101,14 @@ export default function FloatingTabBar({
   };
 
   const indicatorStyle = useAnimatedStyle(() => {
-    const tabWidth = (containerWidth - 16) / tabs.length; // Account for container padding (8px on each side)
+    const tabHeight = (containerHeight - 16) / tabs.length; // Account for container padding (8px on each side)
     return {
       transform: [
         {
-          translateX: interpolate(
+          translateY: interpolate(
             animatedValue.value,
             [0, tabs.length - 1],
-            [0, tabWidth * (tabs.length - 1)]
+            [0, tabHeight * (tabs.length - 1)]
           ),
         },
       ],
@@ -140,17 +140,17 @@ export default function FloatingTabBar({
     indicator: {
       ...styles.indicator,
       backgroundColor: 'rgba(255, 255, 255, 0.2)', // Slightly transparent white overlay for active indicator
-      width: `${(100 / tabs.length) - 3}%`, // Dynamic width based on number of tabs
+      height: `${(100 / tabs.length) - 3}%`, // Dynamic height based on number of tabs
     },
   };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['bottom']}>
+    <SafeAreaView style={styles.safeArea} edges={['left']}>
       <View style={[
         styles.container,
         {
-          width: containerWidth,
-          marginBottom: bottomMargin ?? (Platform.OS === 'ios' ? 10 : 20)
+          height: containerHeight,
+          marginLeft: leftMargin
         }
       ]}>
         <View
@@ -209,19 +209,20 @@ export default function FloatingTabBar({
 const styles = StyleSheet.create({
   safeArea: {
     position: 'absolute',
+    top: 0,
     bottom: 0,
     left: 0,
-    right: 0,
     zIndex: 1000,
-    alignItems: 'center', // Center the content
+    justifyContent: 'center', // Center the content vertically
   },
   container: {
-    marginHorizontal: 20,
-    alignSelf: 'center',
-    // width and marginBottom handled dynamically via props
+    width: 80, // Fixed width for vertical tab bar
+    alignSelf: 'flex-start',
+    // height and marginLeft handled dynamically via props
   },
   blurContainer: {
     overflow: 'hidden',
+    flex: 1,
     // borderRadius and other styling applied dynamically
   },
   background: {
@@ -232,27 +233,28 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 8,
     left: 8,
-    bottom: 8,
+    right: 8,
     borderRadius: 17,
-    width: `${(100 / 2) - 3}%`, // Default for 2 tabs, will be overridden by dynamic styles
+    height: `${(100 / 2) - 3}%`, // Default for 2 tabs, will be overridden by dynamic styles
     // Dynamic styling applied in component
   },
   tabsContainer: {
-    flexDirection: 'row',
-    height: 60,
+    flexDirection: 'column', // Changed from row to column for vertical layout
+    flex: 1,
     alignItems: 'center',
-    paddingHorizontal: 8,
+    paddingVertical: 8,
   },
   tab: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 8,
+    paddingHorizontal: 8,
+    width: '100%',
   },
   tabContent: {
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 2,
+    gap: 4, // Increased gap for vertical layout
   },
   iconContainer: {
     position: 'relative',
@@ -275,9 +277,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   tabLabel: {
-    fontSize: 10,
+    fontSize: 9, // Slightly smaller for vertical layout
     fontWeight: '500',
-    marginTop: 2,
     textAlign: 'center',
     // Dynamic styling applied in component
   },

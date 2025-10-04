@@ -1,10 +1,11 @@
 
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, Pressable, Alert, Switch } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, Pressable, Alert, Switch, Platform } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, commonStyles } from '@/styles/commonStyles';
 import { IconSymbol } from '@/components/IconSymbol';
+import * as Print from 'react-native-print';
 
 export default function NewApplicationScreen() {
   const router = useRouter();
@@ -88,6 +89,274 @@ export default function NewApplicationScreen() {
     return true;
   };
 
+  const generatePrintableHTML = () => {
+    const availableHoursArray = Object.entries(availableHours)
+      .filter(([_, selected]) => selected)
+      .map(([key, _]) => {
+        switch (key) {
+          case 'weekdayEvenings': return 'Weekday Evenings';
+          case 'weekends': return 'Weekends';
+          case 'summerFullTime': return 'Summer Full-time';
+          default: return key;
+        }
+      });
+
+    return `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Daytona Beach Police Explorer Application</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              margin: 40px;
+              line-height: 1.6;
+              color: #333;
+            }
+            .header {
+              text-align: center;
+              margin-bottom: 30px;
+              border-bottom: 2px solid #1e40af;
+              padding-bottom: 20px;
+            }
+            .header h1 {
+              color: #1e40af;
+              margin: 0;
+              font-size: 24px;
+            }
+            .header h2 {
+              color: #666;
+              margin: 5px 0 0 0;
+              font-size: 18px;
+              font-weight: normal;
+            }
+            .section {
+              margin-bottom: 25px;
+            }
+            .section-title {
+              background-color: #1e40af;
+              color: white;
+              padding: 8px 15px;
+              margin: 0 0 15px 0;
+              font-size: 16px;
+              font-weight: bold;
+            }
+            .field-group {
+              display: flex;
+              margin-bottom: 15px;
+            }
+            .field {
+              margin-bottom: 10px;
+              flex: 1;
+              margin-right: 20px;
+            }
+            .field:last-child {
+              margin-right: 0;
+            }
+            .field-label {
+              font-weight: bold;
+              color: #1e40af;
+              margin-bottom: 3px;
+            }
+            .field-value {
+              border-bottom: 1px solid #ccc;
+              padding-bottom: 2px;
+              min-height: 20px;
+            }
+            .checkbox-group {
+              margin: 10px 0;
+            }
+            .checkbox-item {
+              margin: 5px 0;
+            }
+            .signature-section {
+              margin-top: 40px;
+              border-top: 1px solid #ccc;
+              padding-top: 20px;
+            }
+            .signature-line {
+              border-bottom: 1px solid #333;
+              width: 300px;
+              height: 40px;
+              display: inline-block;
+              margin: 0 10px;
+            }
+            @media print {
+              body { margin: 20px; }
+              .no-print { display: none; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>DAYTONA BEACH POLICE EXPLORER PROGRAM</h1>
+            <h2>New Member Application</h2>
+            <p>Application Date: ${new Date().toLocaleDateString()}</p>
+          </div>
+
+          <div class="section">
+            <h3 class="section-title">Personal Information</h3>
+            <div class="field-group">
+              <div class="field">
+                <div class="field-label">First Name:</div>
+                <div class="field-value">${formData.firstName}</div>
+              </div>
+              <div class="field">
+                <div class="field-label">Last Name:</div>
+                <div class="field-value">${formData.lastName}</div>
+              </div>
+            </div>
+            <div class="field-group">
+              <div class="field">
+                <div class="field-label">Email:</div>
+                <div class="field-value">${formData.email}</div>
+              </div>
+              <div class="field">
+                <div class="field-label">Phone:</div>
+                <div class="field-value">${formData.phone}</div>
+              </div>
+            </div>
+            <div class="field">
+              <div class="field-label">Date of Birth:</div>
+              <div class="field-value">${formData.dateOfBirth}</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Address:</div>
+              <div class="field-value">${formData.address}</div>
+            </div>
+            <div class="field-group">
+              <div class="field">
+                <div class="field-label">City:</div>
+                <div class="field-value">${formData.city}</div>
+              </div>
+              <div class="field">
+                <div class="field-label">State:</div>
+                <div class="field-value">${formData.state}</div>
+              </div>
+              <div class="field">
+                <div class="field-label">ZIP Code:</div>
+                <div class="field-value">${formData.zipCode}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3 class="section-title">Emergency Contact</h3>
+            <div class="field">
+              <div class="field-label">Emergency Contact Name:</div>
+              <div class="field-value">${formData.emergencyContactName}</div>
+            </div>
+            <div class="field-group">
+              <div class="field">
+                <div class="field-label">Emergency Contact Phone:</div>
+                <div class="field-value">${formData.emergencyContactPhone}</div>
+              </div>
+              <div class="field">
+                <div class="field-label">Relationship:</div>
+                <div class="field-value">${formData.emergencyContactRelation}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3 class="section-title">School Information</h3>
+            <div class="field">
+              <div class="field-label">School Name:</div>
+              <div class="field-value">${formData.schoolName}</div>
+            </div>
+            <div class="field-group">
+              <div class="field">
+                <div class="field-label">Grade Level:</div>
+                <div class="field-value">${formData.gradeLevel}</div>
+              </div>
+              <div class="field">
+                <div class="field-label">GPA:</div>
+                <div class="field-value">${formData.gpa || 'Not provided'}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3 class="section-title">Background Information</h3>
+            <div class="field">
+              <div class="field-label">Have you ever been charged with a misdemeanor or felony?</div>
+              <div class="field-value">${formData.hasCharges ? 'Yes' : 'No'}</div>
+            </div>
+            ${formData.hasCharges ? `
+              <div class="field">
+                <div class="field-label">Details about charges:</div>
+                <div class="field-value">${formData.chargeDetails}</div>
+              </div>
+            ` : ''}
+          </div>
+
+          <div class="section">
+            <h3 class="section-title">Application Questions</h3>
+            <div class="field">
+              <div class="field-label">Why do you want to join the Explorer program?</div>
+              <div class="field-value">${formData.whyJoin}</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Prior Experience:</div>
+              <div class="field-value">${formData.priorExperience || 'None provided'}</div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3 class="section-title">Availability</h3>
+            <div class="checkbox-group">
+              ${availableHoursArray.map(hour => `
+                <div class="checkbox-item">☑ ${hour}</div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="section">
+            <h3 class="section-title">Agreements</h3>
+            <div class="checkbox-group">
+              <div class="checkbox-item">${formData.hasTransportation ? '☑' : '☐'} I have reliable transportation to events</div>
+              <div class="checkbox-item">${formData.parentConsent ? '☑' : '☐'} Parent/Guardian consent obtained</div>
+              <div class="checkbox-item">${formData.backgroundCheck ? '☑' : '☐'} I agree to background check</div>
+            </div>
+          </div>
+
+          <div class="signature-section">
+            <p><strong>Applicant Signature:</strong> <span class="signature-line"></span> <strong>Date:</strong> <span class="signature-line"></span></p>
+            <br>
+            <p><strong>Parent/Guardian Signature:</strong> <span class="signature-line"></span> <strong>Date:</strong> <span class="signature-line"></span></p>
+            <br>
+            <p><strong>Advisor Signature:</strong> <span class="signature-line"></span> <strong>Date:</strong> <span class="signature-line"></span></p>
+          </div>
+        </body>
+      </html>
+    `;
+  };
+
+  const handlePrint = async () => {
+    try {
+      if (Platform.OS === 'web') {
+        // For web, open print dialog with the HTML content
+        const printWindow = window.open('', '_blank');
+        if (printWindow) {
+          printWindow.document.write(generatePrintableHTML());
+          printWindow.document.close();
+          printWindow.print();
+        }
+      } else {
+        // For mobile, use react-native-print
+        await Print.printAsync({
+          html: generatePrintableHTML(),
+          width: 612,
+          height: 792,
+        });
+      }
+    } catch (error) {
+      console.log('Print error:', error);
+      Alert.alert('Print Error', 'Unable to print the application. Please try again.');
+    }
+  };
+
   const handleSubmit = () => {
     if (!validateForm()) return;
 
@@ -134,6 +403,11 @@ export default function NewApplicationScreen() {
               <IconSymbol name="chevron.left" size={20} color={colors.text} />
             </Pressable>
           ),
+          headerRight: () => (
+            <Pressable onPress={handlePrint} style={styles.headerButton}>
+              <IconSymbol name="printer" size={20} color={colors.text} />
+            </Pressable>
+          ),
         }}
       />
       <SafeAreaView style={[commonStyles.wrapper]} edges={['bottom']}>
@@ -149,6 +423,12 @@ export default function NewApplicationScreen() {
             <Text style={styles.headerSubtitle}>
               Complete this application to begin your journey with the Daytona Beach Police Explorers
             </Text>
+            
+            {/* Print Button */}
+            <Pressable style={styles.printButton} onPress={handlePrint}>
+              <IconSymbol name="printer" size={20} color={colors.text} />
+              <Text style={styles.printButtonText}>Print Application</Text>
+            </Pressable>
           </View>
 
           {/* Personal Information */}
@@ -562,6 +842,22 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     textAlign: 'center',
     lineHeight: 22,
+    marginBottom: 20,
+  },
+  printButton: {
+    backgroundColor: colors.secondary,
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 16,
+  },
+  printButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.text,
   },
   section: {
     paddingHorizontal: 20,

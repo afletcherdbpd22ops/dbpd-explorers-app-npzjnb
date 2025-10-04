@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, View, StyleSheet } from 'react-native';
 import { NativeTabs, Icon, Label } from 'expo-router/unstable-native-tabs';
 import { Stack } from 'expo-router';
 import FloatingTabBar, { TabBarItem } from '@/components/FloatingTabBar';
@@ -128,26 +128,39 @@ export default function TabLayout() {
     );
   }
 
-  // For Android and Web, use Stack navigation with custom floating tab bar
+  // For Android and Web, use Stack navigation with custom floating tab bar and content padding
   return (
-    <>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          animation: 'none', // Remove fade animation to prevent black screen flash
-        }}
-      >
-        <Stack.Screen name="(home)" />
-        <Stack.Screen name="calendar" />
-        <Stack.Screen name="roster" />
-        <Stack.Screen name="photos" />
-        <Stack.Screen name="applications" />
-        <Stack.Screen name="messages" />
-        <Stack.Screen name="community-service" />
-        <Stack.Screen name="meetings" />
-        <Stack.Screen name="profile" />
-      </Stack>
+    <View style={styles.container}>
+      <View style={styles.contentContainer}>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            animation: 'none', // Remove fade animation to prevent black screen flash
+          }}
+        >
+          <Stack.Screen name="(home)" />
+          <Stack.Screen name="calendar" />
+          <Stack.Screen name="roster" />
+          <Stack.Screen name="photos" />
+          <Stack.Screen name="applications" />
+          <Stack.Screen name="messages" />
+          <Stack.Screen name="community-service" />
+          <Stack.Screen name="meetings" />
+          <Stack.Screen name="profile" />
+        </Stack>
+      </View>
       <FloatingTabBar tabs={tabs} />
-    </>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  contentContainer: {
+    flex: 1,
+    marginLeft: 120, // Add left margin to account for vertical tab bar (80px width + 40px margin)
+  },
+});
