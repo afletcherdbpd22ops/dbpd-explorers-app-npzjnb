@@ -23,8 +23,18 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.border,
     backgroundColor: colors.surface,
   },
-  backButton: {
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
     marginRight: 16,
+  },
+  homeButton: {
+    padding: 8,
+    borderRadius: 20,
+    backgroundColor: colors.primary,
+  },
+  backButton: {
     padding: 8,
   },
   headerTitle: {
@@ -213,9 +223,14 @@ export default function NewChatScreen() {
       
       {/* Header */}
       <View style={styles.header}>
-        <Pressable style={styles.backButton} onPress={() => router.back()}>
-          <IconSymbol name="chevron.left" size={24} color={colors.text} />
-        </Pressable>
+        <View style={styles.headerLeft}>
+          <Pressable onPress={() => router.push('/(tabs)/(home)')} style={styles.homeButton}>
+            <IconSymbol name="house.fill" size={20} color={colors.text} />
+          </Pressable>
+          <Pressable style={styles.backButton} onPress={() => router.back()}>
+            <IconSymbol name="chevron.left" size={24} color={colors.text} />
+          </Pressable>
+        </View>
         <Text style={styles.headerTitle}>New Message</Text>
       </View>
 

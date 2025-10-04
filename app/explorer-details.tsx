@@ -113,6 +113,16 @@ export default function ExplorerDetailsScreen() {
             backgroundColor: colors.background,
           },
           headerTintColor: colors.text,
+          headerLeft: () => (
+            <View style={styles.headerLeftContainer}>
+              <Pressable onPress={() => router.push('/(tabs)/(home)')} style={styles.homeHeaderButton}>
+                <IconSymbol name="house.fill" size={20} color={colors.text} />
+              </Pressable>
+              <Pressable onPress={() => router.back()} style={styles.headerBackButton}>
+                <IconSymbol name="chevron.left" size={20} color={colors.text} />
+              </Pressable>
+            </View>
+          ),
         }}
       />
       <SafeAreaView style={commonStyles.wrapper} edges={['bottom']}>
@@ -332,6 +342,19 @@ export default function ExplorerDetailsScreen() {
 }
 
 const styles = StyleSheet.create({
+  headerLeftContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  homeHeaderButton: {
+    padding: 6,
+    borderRadius: 6,
+    backgroundColor: colors.primary,
+  },
+  headerBackButton: {
+    padding: 6,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.background,

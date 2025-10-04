@@ -35,6 +35,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  homeButton: {
+    padding: 5,
+    borderRadius: 20,
+    backgroundColor: colors.primary,
+  },
   headerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -231,9 +241,14 @@ export default function AlbumDetailsScreen() {
       <Stack.Screen options={{ headerShown: false }} />
       
       <View style={styles.header}>
-        <Pressable style={styles.backButton} onPress={() => router.back()}>
-          <IconSymbol name="chevron.left" size={24} color={colors.text} />
-        </Pressable>
+        <View style={styles.headerLeft}>
+          <Pressable onPress={() => router.push('/(tabs)/(home)')} style={styles.homeButton}>
+            <IconSymbol name="house.fill" size={20} color={colors.text} />
+          </Pressable>
+          <Pressable style={styles.backButton} onPress={() => router.back()}>
+            <IconSymbol name="chevron.left" size={24} color={colors.text} />
+          </Pressable>
+        </View>
         <Text style={styles.headerTitle} numberOfLines={1}>Album</Text>
         <Pressable
           style={styles.moreButton}

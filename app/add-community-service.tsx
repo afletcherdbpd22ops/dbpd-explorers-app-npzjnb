@@ -20,8 +20,17 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.highlight,
   },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  homeButton: {
+    padding: 8,
+    borderRadius: 20,
+    backgroundColor: colors.primary,
+  },
   backButton: {
-    marginRight: 15,
     padding: 8,
     borderRadius: 20,
     backgroundColor: colors.secondary,
@@ -259,9 +268,14 @@ export default function AddCommunityServiceScreen() {
       <Stack.Screen options={{ headerShown: false }} />
       
       <View style={styles.header}>
-        <Pressable style={styles.backButton} onPress={() => router.back()}>
-          <IconSymbol name="chevron.left" size={20} color={colors.text} />
-        </Pressable>
+        <View style={styles.headerLeft}>
+          <Pressable onPress={() => router.push('/(tabs)/(home)')} style={styles.homeButton}>
+            <IconSymbol name="house.fill" size={20} color={colors.text} />
+          </Pressable>
+          <Pressable style={styles.backButton} onPress={() => router.back()}>
+            <IconSymbol name="chevron.left" size={20} color={colors.text} />
+          </Pressable>
+        </View>
         <Text style={styles.headerTitle}>Add Service Record</Text>
       </View>
 
