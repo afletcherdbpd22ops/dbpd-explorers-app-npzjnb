@@ -36,7 +36,7 @@ export const currentUser: User = {
 
 // Global authentication state (in a real app, use secure storage like Keychain/Keystore)
 declare global {
-  var isAuthenticated: boolean | undefined;
+  let isAuthenticated: boolean | undefined;
 }
 
 // Initialize authentication state
